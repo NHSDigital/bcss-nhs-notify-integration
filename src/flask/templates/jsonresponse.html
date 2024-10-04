@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body%}
+
+<div>
+    Response Status: {{ responseCode }}<br>
+    Raw Response Body: <br>
+    <pre id ="json" >{{ responseJSON }}</pre>
+</div>
+
+{% endblock %}
