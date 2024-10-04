@@ -1,0 +1,27 @@
+body {
+    margin: 2;
+    font-family: sans-serif
+}
+
+.button {
+    border: none;
+    color: rgb(5, 57, 105);
+    background-color: rgb(139, 193, 231);
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.button:hover {
+    background-color: rgb(78, 115, 142);
+    color: white
+}
+
+#requests {
+    padding-left:20px;
+}

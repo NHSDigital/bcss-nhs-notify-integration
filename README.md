@@ -43,11 +43,23 @@ By including preferably a one-liner or if necessary a set of clear CLI instructi
 Clone the repository
 
 ```shell
-git clone https://github.com/nhs-england-tools/repository-template.git
-cd nhs-england-tools/repository-template
+git clone https://github.com/NHSDigital/bcss-nhs-notify-integration.git
+cd bcss-nhs-notify-integration
 ```
 
 ### Prerequisites
+
+You will need to set up your local environment variables in a `.env` file in the `flask` folder to run the Flask application. If you are unsure of any values, ask our devs. We will look to improve this solution in the future.
+
+```
+export TOKEN_URL=https://int.api.service.nhs.uk/oauth2/token
+export API_KEY= {{OUR_API_KEY}}
+export KID= {{OUR_JWKS_KID}}
+export ROUTING_PLAN_ID= {{OUR_ROUTING_PLAN_ID}}
+export NOTIFY_INT_URL= https://int.api.service.nhs.uk/comms
+export PRIVATE_KEY_PATH= {{PATH_TO_OUR_PRIVATE_KEY}}
+export FLASK_APP= {{PATH_TO_FLASK_APP_FILE}}
+```
 
 The following software packages, or their equivalents, are expected to be installed and configured:
 
@@ -82,6 +94,7 @@ make config
 ```
 
 ## Usage
+From the Flask folder you can run the Flask web application using `flask run` if you have exported `FLASK-APP` in your .env as `notify-test.py`, you can also run the Flask web application through running the python file directly.
 
 After a successful installation, provide an informative example of how this project can be used. Additional code snippets, screenshots and demos work well in this space. You may also link to the other documentation resources, e.g. the [User Guide](./docs/user-guide.md) to demonstrate more use cases and to show more features.
 
