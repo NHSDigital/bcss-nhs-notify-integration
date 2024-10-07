@@ -1,11 +1,11 @@
 import uuid
-import jwt  # https://github.com/jpadilla/pyjwt
-import requests
 import json
 from time import time
-from flask import Flask, render_template, request, url_for, redirect
-from dotenv import dotenv_values
+import jwt  # https://github.com/jpadilla/pyjwt
+import requests
 import constants
+from dotenv import dotenv_values
+from flask import Flask, render_template, request, url_for, redirect
 
 ### You will need to set up local env variables
 
@@ -13,12 +13,12 @@ config = dotenv_values(".env")
 app = Flask(__name__)
 
 def generate_jwt():
-    ########## Generate JWT ########## 
-    with open(config['PRIVATE_KEY_PATH'], "r") as f:
-      private_key = f.read()
+    ########## Generate JWT ##########
+    with open(config['PRIVATE_KEY_PATH'], "r", encoding="utf-8") as f:
+        private_key = f.read()
 
     claims = {
-      "sub": config['API_KEY'], 
+      "sub": config['API_KEY'],
       "iss": config['API_KEY'],
       "jti": str(uuid.uuid4()),
       "aud": "https://int.api.service.nhs.uk/oauth2/token",
