@@ -1,12 +1,12 @@
 import uuid
-import jwt  # https://github.com/jpadilla/pyjwt
 import requests
 import json
-from time import time
-from flask import Flask, render_template
 from dotenv import dotenv_values
 
-#stolen from tom :D
+config = dotenv_values(".env")
+
+
+# stolen from tom :D
 def create_message(access_token):
     ########## Notify API call ##########
     notify_headers = {
@@ -20,21 +20,18 @@ def create_message(access_token):
         "data": {
             "type": "Message",
             "attributes": {
-                "routingPlanId": config['ROUTING_PLAN_ID'],
+                "routingPlanId": config["ROUTING_PLAN_ID"],
                 "messageReference": message_reference,
-                "recipient": {
-                    "nhsNumber": "9990548609",
-                    "dateOfBirth": "1932-01-06"
-                },
-                "originator": {
-                    "odsCode": "X26"
-                },
-                "personalisation": {
-                    "custom" : "value"
-                }
-            }
-            }
+                "recipient": {"nhsNumber": "9990548609", "dateOfBirth": "1932-01-06"},
+                "originator": {"odsCode": "X26"},
+                "personalisation": {"custom": "value"},
+            },
         }
+    }
 
-    notify_response = requests.post(config['NOTIFY_INT_URL']+"/v1/messages", data = json.dumps(message_batch_body), headers = notify_headers)
+    notify_response = requests.post(
+        config["NOTIFY_INT_URL"] + "/v1/messages",
+        data=json.dumps(message_batch_body),
+        headers=notify_headers,
+    )
     return notify_response
