@@ -51,7 +51,7 @@ cd bcss-nhs-notify-integration
 
 You will need to set up your local environment variables in a `.env` file in the `flask` folder to run the Flask application. If you are unsure of any values, ask our devs. We will look to improve this solution in the future.
 
-```
+```text
 export TOKEN_URL=https://int.api.service.nhs.uk/oauth2/token
 export API_KEY= {{OUR_API_KEY}}
 export KID= {{OUR_JWKS_KID}}
@@ -94,7 +94,8 @@ make config
 ```
 
 ## Usage
-From the Flask folder you can run the Flask web application using `flask run` if you have exported `FLASK-APP` in your .env as `notify-test.py`, you can also run the Flask web application through running the python file directly.
+
+From the Flask folder you can run the Flask web application using `flask run` if you have exported `FLASK-APP` in your .env as `notify-test.py`, you can also run the Flask web application through running the file directly.
 
 After a successful installation, provide an informative example of how this project can be used. Additional code snippets, screenshots and demos work well in this space. You may also link to the other documentation resources, e.g. the [User Guide](./docs/user-guide.md) to demonstrate more use cases and to show more features.
 

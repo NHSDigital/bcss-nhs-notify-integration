@@ -8,12 +8,12 @@ from dotenv import dotenv_values
 
 #stolen from tom :D
 def create_message(access_token):
-    ########## Notify API call ########## 
+    ########## Notify API call ##########
     notify_headers = {
-      "Content-Type": "application/vnd.api+json",
-      "Accept": "application/vnd.api+json",
-      "Authorization": "Bearer " + access_token,
-      "X-Correlation-Id": str(uuid.uuid4()),
+        "Content-Type": "application/vnd.api+json",
+        "Accept": "application/vnd.api+json",
+        "Authorization": "Bearer " + access_token,
+        "X-Correlation-Id": str(uuid.uuid4()),
     }
     message_reference = "e69744f8-d288-4e27-b5fb-25c7c6f8cb14"
     message_batch_body = {
