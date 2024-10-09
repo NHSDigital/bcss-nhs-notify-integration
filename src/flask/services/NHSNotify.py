@@ -1,0 +1,43 @@
+from .BaseAPIClient import BaseAPIClient
+from .Util import Util
+
+import uuid
+
+class NHSNotify:
+  
+  def __init__(self, base_url: str) -> None:
+    self.api_client = BaseAPIClient(base_url)
+  
+  def send_single_message(self, access_token: str, routing_config_id: str, recipients: list[dict]) -> dict:
+    headers = {
+      "content-type": "application/vnd.api+json",
+      "accept": "application/vnd.api+json",
+      "x-correlation-id": str(uuid.uuid4()),
+      "authorization": "Bearer " + access_token
+    }
+        
+    requestBody: dict = Util.generate_single_message_request_body(recipients, routing_config_id)
+    
+    response: dict = self.api_client.make_request(method="POST", endpoint="/v1/messages", json=requestBody, headers=headers)
+    return response
+  
+  def send_batch_message(self, access_token: str, routing_config_id: str, recipients: list[dict]) -> dict:
+    headers = {
+      "content-type": "application/vnd.api+json",
+      "accept": "application/vnd.api+json",
+      "x-correlation-id": str(uuid.uuid4()),
+      "authorization": "Bearer " + access_token
+    }
+    
+    message_batch_reference: str = str(uuid.uuid4())
+    
+    requestBody: dict = Util.generate_batch_message_request_body(routing_config_id, message_batch_reference, recipients)
+    
+    response: dict = self.api_client.make_request(method="POST", endpoint="/v1/message-batches", json=requestBody, headers=headers)
+    return response
+  
+  def get_message_status(self, access_token: str, routing_config_id: str, recipient: dict) -> dict:
+    pass
+  
+  def get_NHS_acccount_details():
+    pass
