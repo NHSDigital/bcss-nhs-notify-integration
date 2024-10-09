@@ -11,3 +11,7 @@ version.json
 !project.code-workspace
 
 # Please, add your custom content below!
+.env
+jwtRS512.key
+jwtRS512.pem
+__pycache__/
