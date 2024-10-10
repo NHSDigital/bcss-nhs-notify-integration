@@ -15,6 +15,10 @@ repos:
       - id: pretty-format-json
         args: ['--autofix']
     # -   id: ...
+  - repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+    -   id: black
   - repo: local
     hooks:
       - id: sort-dictionary
