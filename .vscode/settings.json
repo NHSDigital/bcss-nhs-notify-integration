@@ -1,5 +1,7 @@
 {
   "autoOpenWorkspace.enableAutoOpenIfSingleWorkspace": true,
+  "editor.defaultFormatter": "ms-python.black-formatter",
+  "editor.formatOnSave": true,
   "files.exclude": {
     "**/.DS_Store": true,
     "**/.git": true,
