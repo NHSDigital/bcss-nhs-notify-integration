@@ -57,3 +57,9 @@ repos:
         entry: ./scripts/githooks/check-terraform-format.sh
         language: script
         pass_filenames: false
+  - repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+        args: [--line-length=88]
+        language_version: python3.11

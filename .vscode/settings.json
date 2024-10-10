@@ -11,5 +11,7 @@
     ".devcontainer": true,
     ".github": false,
     ".vscode": false
-  }
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "ms-python.black-formatter"
 }
