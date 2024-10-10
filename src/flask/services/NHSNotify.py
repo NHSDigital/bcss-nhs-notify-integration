@@ -36,8 +36,31 @@ class NHSNotify:
     response: dict = self.api_client.make_request(method="POST", endpoint="/v1/message-batches", json=requestBody, headers=headers)
     return response
   
-  def get_message_status(self, access_token: str, routing_config_id: str, recipient: dict) -> dict:
-    pass
-  
-  def get_NHS_acccount_details():
-    pass
+  def get_message_status(self, access_token: str, message_id: str) -> dict:
+    headers = {
+      "content-type": "application/vnd.api+json",
+      "accept": "application/vnd.api+json",
+      "x-correlation-id": str(uuid.uuid4()),
+      "authorization": "Bearer " + access_token
+    }
+    
+    response: dict = self.api_client.make_request(method="GET", endpoint=f"/v1/messages/{message_id}", headers=headers)
+    
+    return response
+    
+  def get_NHS_acccount_details(self, access_token: str, ods_code: str, page_number: str):
+    headers = {
+      "content-type": "application/vnd.api+json",
+      "accept": "application/vnd.api+json",
+      "x-correlation-id": str(uuid.uuid4()),
+      "authorization": "Bearer " + access_token
+    }
+    
+    params: dict = {
+      "ods-organisation-code" : ods_code,
+      "page" : page_number
+    }
+    
+    response: dict = self.api_client.make_request(method="GET", endpoint=f"/channels/nhsapp/accounts", headers=headers, params=params)
+    
+    return response

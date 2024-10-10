@@ -22,3 +22,13 @@ class BCSSCommsManager:
             batch_message_response = self.nhs_notify.send_batch_message(access_token, routing_config_id, recipients)
             self.data_access.create_data(data=batch_message_response)
             return batch_message_response
+
+    def get_message_status(self, message_id: str) -> dict:        
+        access_token: str = self.auth_manager.get_access_token()
+        response = self.nhs_notify.get_message_status(access_token, message_id)
+        return response
+    
+    def get_nhs_app_account_details(self, ods_code:str, page_number: str):
+        access_token: str = self.auth_manager.get_access_token()
+        response = self.nhs_notify.get_NHS_acccount_details(access_token, ods_code, page_number)
+        return response
