@@ -16,9 +16,11 @@ repos:
         args: ['--autofix']
     # -   id: ...
   - repo: https://github.com/psf/black
-    rev: 22.10.0
+    rev: 22.3.0
     hooks:
-    -   id: black
+      - id: black
+        args: [--line-length=88]
+        language_version: python3.9
   - repo: local
     hooks:
       - id: sort-dictionary
