@@ -23,18 +23,6 @@ repos:
         language_version: python3.9
   - repo: local
     hooks:
-    - id: pylint
-      name: pylint
-      entry: pylint
-      language: system
-      types: [python]
-      args:
-        [
-          "-rn", # Only display messages
-          "-sn", # Don't display the score
-        ]
-  - repo: local
-    hooks:
       - id: sort-dictionary
         name: Sort dictionary
         entry: ./scripts/githooks/sort-dictionary.sh
