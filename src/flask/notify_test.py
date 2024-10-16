@@ -36,15 +36,9 @@ def get_nhs_app_details(ods_code: str, page_number: int):
     response = bcss_comms_manager.get_nhs_app_account_details(ods_code, page_number)
     return response
 
-
 @app.route("/")
 def main():
-    if request.method == "POST":
-        message_id = request.form.get("messageID")
-        return redirect(url_for("get_message_status", messageID=message_id))
-    return render_template(
-        "index.html",
-    )
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
