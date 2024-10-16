@@ -1,14 +1,8 @@
-import uuid
-import json
-from time import time
-import jwt  # https://github.com/jpadilla/pyjwt
-import requests
-import constants
 from dotenv import dotenv_values
 from flask import Flask, render_template, request, url_for, redirect, jsonify
 
 import os
-from services.BCSSCommsManager import BCSSCommsManager
+from .services.BCSSCommsManager import BCSSCommsManager
 
 ### You will need to set up local env variables
 
@@ -17,22 +11,26 @@ app = Flask(__name__)
 
 bcss_comms_manager = BCSSCommsManager()
 
-@app.route('/send-pre-invitation', methods=['POST'])
+
+@app.route("/send-pre-invitation", methods=["POST"])
 def send_pre_invitation():
-    request_data = request.get_json() 
+    request_data = request.get_json()
 
     if not request_data:
         return jsonify({"error": "Invalid input"}), 400
 
-    recipients = request_data.get('data') 
+    recipients = request_data.get("data")
 
-    response = bcss_comms_manager.send_pre_inviation(os.getenv("ROUTING_PLAN_ID"), recipients)
+    response = bcss_comms_manager.send_pre_inviation(
+        os.getenv("ROUTING_PLAN_ID"), recipients
+    )
 
     return jsonify(response["data"]), 200
 
-@app.route('/message-status/<message_id>', methods=['GET'])
+
+@app.route("/message-status/<message_id>", methods=["GET"])
 def get_message_status(message_id: str):
-    
+
     response = bcss_comms_manager.get_message_status(message_id)
 
     return jsonify(response), 200
