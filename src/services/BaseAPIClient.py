@@ -19,4 +19,4 @@ class BaseAPIClient:
         response = requests.request(
             method, url, headers=headers, data=data, json=json, params=params
         )
-        return response.json()
+        return response

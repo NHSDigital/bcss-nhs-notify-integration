@@ -2,6 +2,7 @@ from .BaseAPIClient import BaseAPIClient
 from .Util import Util
 
 import uuid
+import json
 
 
 class NHSNotify:
@@ -25,7 +26,7 @@ class NHSNotify:
         response: dict = self.api_client.make_request(
             method="POST", endpoint="/v1/messages", json=requestBody, headers=headers
         )
-        return response
+        return response.json()
 
     def send_batch_message(
         self, access_token: str, routing_config_id: str, recipients: list[dict]
