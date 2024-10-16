@@ -1,14 +1,13 @@
 import json
 from services.BaseAPIClient import BaseAPIClient
 from services.AuthManager import AuthManager
-from dotenv import dotenv_values
 
 
 class TestBaseAPIClient:
-    def setup_method(self, method):
+    # Setup mainly for the notify specific functions, can change this to generic set-up if decided to switch
+    def setup_method(self, method, nhs_notify_base_url):
         print(f"Setting up test {method}")
-        self.config = dotenv_values("../.env")
-        self.base_api_client = BaseAPIClient(self.config.get("NHS_NOTIFY_BASE_URL"))
+        self.base_api_client = BaseAPIClient(nhs_notify_base_url)
         self.auth_manager = AuthManager()
         self.access_token = self.auth_manager.get_access_token()
 
@@ -52,15 +51,15 @@ class TestBaseAPIClient:
     # In this file could potentially just make a basic API request to an endpoint that demonstrates the
     # BaseAPIClient can set up a URL and potentially an endpoint and make a request #####
 
-    def test_initialization(self):
-        assert self.base_api_client.base_url == self.config.get("NHS_NOTIFY_BASE_URL")
+    def test_initialization(self, nhs_notify_base_url):
+        assert self.base_api_client.base_url == nhs_notify_base_url
 
     # Test successful request to notify (Do we need one for token request?)
-    def test_make_request(self, request_body: json, request_headers: dict):
+    def test_make_request(
+        self, request_body: json, request_headers: dict, routing_config_id: str
+    ):
         request_headers["authorization"] = f"Bearer {self.access_token}"
-        request_body["data"]["attributes"]["routingPlanId"] = self.config.get(
-            "ROUTING_PLAN_ID"
-        )
+        request_body["data"]["attributes"]["routingPlanId"] = routing_config_id
         response = self.base_api_client.make_request(
             method="POST",
             endpoint="/v1/messages",
@@ -74,11 +73,9 @@ class TestBaseAPIClient:
 
     # Test request should fail without auth header
     def test_make_request_missing_auth_header(
-        self, request_body: json, request_headers: dict
+        self, request_body: json, request_headers: dict, routing_config_id
     ):
-        request_body["data"]["attributes"]["routingPlanId"] = self.config.get(
-            "ROUTING_PLAN_ID"
-        )
+        request_body["data"]["attributes"]["routingPlanId"] = routing_config_id
         response = self.base_api_client.make_request(
             method="POST",
             endpoint="/v1/messages",
