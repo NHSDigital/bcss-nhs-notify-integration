@@ -43,14 +43,44 @@ class TestBaseAPIClient:
     def teardown_method(self, method):
         print(f"Tearing down test {method}")
 
-    ##### Potentially thinking these particular requests should be in a different test file
+    # Test init for BaseAPIClient works as intended
+    def test_initialization_generic(self):
+        self.base_api_client.base_url = "https://reqres.in"
+        assert self.base_api_client.base_url == "https://reqres.in"
+
+    # Test to show the make_request function can combine base_urls and endpoints to make a request
+    def test_make_request_generic(self):
+        self.base_api_client.base_url = "https://reqres.in"
+        response = self.base_api_client.make_request(
+            method="GET",
+            endpoint="/api/users",
+            data=None,
+            json=None,
+            headers=None,
+            params=None,
+        )
+        responseJson = response.json()
+        assert response.status_code == 200
+        assert responseJson["page"] == 1
+
+    def test_make_request_generic_incorrect_endpoint(self):
+        self.base_api_client.base_url = "https://reqres.in"
+        response = self.base_api_client.make_request(
+            method="GET",
+            endpoint="/foo/bar",
+            data=None,
+            json=None,
+            headers=None,
+            params=None,
+        )
+        assert response.status_code == 404
+
+    ##### Potentially thinking these particular requests below should be in a different test file
     # for specific endpoints to notify and auth headers, can translate those over if that's the case
     # In this file could potentially just make a basic API request to an endpoint that demonstrates the
     # BaseAPIClient can set up a URL and potentially an endpoint and make a request #####
 
-    # Test init for BaseAPIClient works as intended
     def test_initialization(self):
-        print()
         assert self.base_api_client.base_url == self.config.get("NHS_NOTIFY_BASE_URL")
 
     # Test successful request to notify (Do we need one for token request?)
@@ -101,7 +131,6 @@ class TestBaseAPIClient:
             headers=request_headers,
         )
         responseJson = response.json()
-        print(responseJson)
         assert response.status_code == 400
         assert responseJson["errors"][0]["code"] == "CM_MISSING_VALUE"
         assert (
