@@ -1,0 +1,19 @@
+
+services:
+  flask-app:
+    build: .
+    container_name: flask-app
+    ports:
+      - "5001:5000"  # Mapping host port 5001 to container port 5000
+    env_file:         # Reference to the environment file
+      - .env
+  
+  mongo:
+    image: mongo:latest  # Use the latest official MongoDB image
+    ports:
+      - "27017:27017"     # Expose MongoDB on port 27017
+    volumes:
+      - mongo_data:/data/db  # Persist MongoDB data
+
+volumes:
+  mongo_data:  
