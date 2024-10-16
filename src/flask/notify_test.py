@@ -1,16 +1,9 @@
-import uuid
-import json
 from time import time
-import jwt  # https://github.com/jpadilla/pyjwt
-import requests
-import constants
 from dotenv import dotenv_values
 from flask import Flask, render_template, request, url_for, redirect, jsonify
 
 import os
 from services.BCSSCommsManager import BCSSCommsManager
-
-### You will need to set up local env variables
 
 config = dotenv_values(".env")
 app = Flask(__name__)
@@ -57,10 +50,3 @@ def main():
 if __name__ == "__main__":
     app.run(debug=True)
     main()
-
-### TO DO:
-# Decouple JWT Gen and Authentication from API calls, own files probably (Uzairs refactoring a good start)
-# Clean up duplicate code, move Notify headers etc. into own file
-# Add between pages at least for POST requests to paste in message bodies rather than hard coded
-# Take any request payload content into own folder (examples?)
-# Can probably put endpoint strings in variables too
