@@ -2,6 +2,7 @@ import pytest
 import json
 import uuid
 from dotenv import dotenv_values
+from time import time
 
 config = dotenv_values("../.env")
 
@@ -108,4 +109,20 @@ def test_notify_message_batch() -> json:
                 "messages": list(map(Util.generate_message, recipients)),
             },
         }
+    }
+
+
+@pytest.fixture()
+def test_jwt_params(kid, api_key, token_url) -> dict:
+    return {
+        "algorithm": "RS512",
+        "expiry_minutes": 5,
+        "headers": {"alg": "RS512", "typ": "JWT", "kid": kid},
+        "payload": {
+            "sub": api_key,
+            "iss": api_key,
+            "jti": str(uuid.uuid4()),
+            "aud": token_url,
+            "exp": int(time()) + 300,
+        },
     }

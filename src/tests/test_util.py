@@ -1,5 +1,7 @@
 from services.Util import Util
+import jwt
 import json
+import pytest
 
 
 class TestUtil:
@@ -51,23 +53,85 @@ class TestUtil:
         # (load in from test examples folder?)
         pass
 
-    def test_generate_jwt(self):
-        # test_jwt = Util.generate_jwt("RS
+    def test_generate_jwt(self, test_jwt_params):
+        test_private_key = Util.get_private_key("../jwtRS512.key")
+        test_jwt = Util.generate_jwt(
+            test_jwt_params["algorithm"],
+            test_private_key,
+            test_jwt_params["headers"],
+            test_jwt_params["payload"],
+            test_jwt_params["expiry_minutes"],
+        )
         # Expect a JWT to be generated, check if its a valid JWT,
         pass
 
-    def test_generate_jwt_fail_private_key(self):
+    def test_generate_jwt_fail_private_key_format(self, test_jwt_params):
+        with pytest.raises(TypeError) as exception:
+            Util.generate_jwt(
+                test_jwt_params["algorithm"],
+                None,
+                test_jwt_params["headers"],
+                test_jwt_params["payload"],
+                test_jwt_params["expiry_minutes"],
+            )
+        assert "Expecting a PEM-formatted key." in str(exception)
         # Pass in incorrect/missing private key and expect a failure
-        pass
 
-    def test_generate_jwt_fail_kid(self):
+    def test_generate_jwt_fail_kid_format(self, test_jwt_params):
+        with pytest.raises(jwt.InvalidTokenError) as exception:
+            test_private_key = Util.get_private_key("../jwtRS512.key")
+            test_jwt_params["headers"]["kid"] = None
+            Util.generate_jwt(
+                test_jwt_params["algorithm"],
+                test_private_key,
+                test_jwt_params["headers"],
+                test_jwt_params["payload"],
+                test_jwt_params["expiry_minutes"],
+            )
+        assert "Key ID header parameter must be a string" in str(exception)
         # Pass in incorrect/missing KID and expect a failure
+
+    #### Could add tests to then decode the returned JWT to check the contents are "null" where the missing info was
+    #### Aud/ISS/Sub, even Algorithm?
+    def test_generate_jwt_null_token_url(self, test_jwt_params):
+        test_private_key = Util.get_private_key("../jwtRS512.key")
+        test_jwt_params["payload"]["aud"] = None
+        test_jwt = Util.generate_jwt(
+            test_jwt_params["algorithm"],
+            test_private_key,
+            test_jwt_params["headers"],
+            test_jwt_params["payload"],
+            test_jwt_params["expiry_minutes"],
+        )
+        # Decode test_jwt using the public key
+        # Assert that the aud is null if possible?
         pass
 
-    def test_generate_jwt_fail_api_key(self):
-        # Pass in incorrect/missing API_KEY and expect a failure
+    def test_generate_jwt_null_api_keys(self, test_jwt_params):
+        test_private_key = Util.get_private_key("../jwtRS512.key")
+        test_jwt_params["payload"]["aud"] = None
+        test_jwt = Util.generate_jwt(
+            test_jwt_params["algorithm"],
+            test_private_key,
+            test_jwt_params["headers"],
+            test_jwt_params["payload"],
+            test_jwt_params["expiry_minutes"],
+        )
+        # Decode test_jwt using the public key
+        # Assert that the sub and iss is null if possible?
         pass
 
-    def test_generate_jwt_fail_token_url(self):
-        # Pass in incorrect/missing TOKEN_URL and expect a failure
+    def test_generate_jwt_null_algorithm(self, test_jwt_params):
+        test_private_key = Util.get_private_key("../jwtRS512.key")
+        test_jwt_params["payload"]["aud"] = None
+        test_jwt_params["headers"]["alg"] = None
+        test_jwt = Util.generate_jwt(
+            test_jwt_params["algorithm"],
+            test_private_key,
+            test_jwt_params["headers"],
+            test_jwt_params["payload"],
+            test_jwt_params["expiry_minutes"],
+        )
+        # Decode test_jwt using the public key
+        # Assert that the algorithm is null if possible?
         pass
