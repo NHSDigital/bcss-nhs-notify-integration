@@ -45,11 +45,14 @@ class TestUtil:
         pass
 
     def test_get_private_key(self):
+        test_private_key = Util.get_private_key("test_private_key.key")
+        assert test_private_key == "test_private_key\n"
         # Can read a private key from a file, assert the private key variable contents match the test file
         # (load in from test examples folder?)
         pass
 
     def test_generate_jwt(self):
+        # test_jwt = Util.generate_jwt("RS
         # Expect a JWT to be generated, check if its a valid JWT,
         pass
 
