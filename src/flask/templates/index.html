@@ -5,23 +5,32 @@
 {% endblock %}
 
 {% block body%}
-<div id="requests">
-    <div id="POSTS">
-        <h2>POST Requests</h2>
-        <!-- TODO:
-            -   Update with new POST endpoints
-                    send_pre_invitation
-        -->
-    </div>
+<section>
+    <h1>Send Batch Pre Inviation</h1>
+    <p><strong>Endpoint:</strong> <code>/send-pre-invitation</code></p>
+    <p><strong>Method:</strong> <code>POST</code></p>
+    <button onclick="sendBatchPreInvitationRequest()">Send Request</button>
+    <div id="batchPreInvitationRequestBodyDisplay"></div>
+    <div id="batchPreInvitationResponseDisplay"></div>
+</section>
 
-    <div id="GETS">
-        <h2>GET Requests</h2>
-        <!-- TODO:
-            -   Update with new GET endpoints
-                    get_message_status
-                    get_nhs_app_details
-        -->
-    </div>
-</div>
+<section>
+    <h1>Send Single Pre Inviation</h1>
+    <p><strong>Endpoint:</strong> <code>/send-pre-invitation</code></p>
+    <p><strong>Method:</strong> <code>POST</code></p>
+    <button onclick="sendSinglePreInvitationRequest()">Send Request</button>
+    <div id="singlePreInvitationRequestBodyDisplay"></div>
+    <div id="singlePreInvitationResponseDisplay"></div>
+</section>
+
+<section>
+    <h2>Get Message Status</h2>
+    <p><strong>Endpoint:</strong><code>/message-status/{message_id}</code></p>
+    <p><strong>Method:</strong> <code>GET</code></p>
+    <label for="postId">Enter Message ID:</label>
+    <input type="text" id="postId">
+    <button onclick="sendGetMessageStatusRequest()">Send GET Request</button>
+    <div id="getMessageStatusResponseDisplay"></div>
+</section>
 
 {% endblock %}
