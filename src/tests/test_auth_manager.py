@@ -5,16 +5,15 @@ from services.AuthManager import AuthManager
 class TestAuthManager:
     def setup_method(self, method):
         print(f"Setting up test {method}")
-        self.config = dotenv_values("../.env")
         self.auth_manager = AuthManager()
 
     def teardown_method(self, method):
         print(f"Tearing down test {method}")
 
     # Test the init dunder of the class
-    def test_initialization(self):
+    def test_initialization(self, token_url):
         # Only setup is baseapi client, and if this is mocked is this needed?
-        assert self.auth_manager.api_client.base_url == self.config.get("TOKEN_URL")
+        assert self.auth_manager.api_client.base_url == token_url
 
     # Test JWT gen, make sure its a legit JWT? probably a library for that
     def test_jwt_gen_setup(self):

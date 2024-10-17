@@ -99,20 +99,6 @@ def test_notify_message_single() -> json:
 
 
 @pytest.fixture()
-def test_notify_message_batch() -> json:
-    return {
-        "data": {
-            "type": "MessageBatch",
-            "attributes": {
-                "routingPlanId": "test_routing_config_id",
-                "messageBatchReference": "test_message_batch_reference",
-                "messages": list(map(Util.generate_message, recipients)),
-            },
-        }
-    }
-
-
-@pytest.fixture()
 def test_jwt_params(kid, api_key, token_url) -> dict:
     return {
         "algorithm": "RS512",
@@ -124,5 +110,63 @@ def test_jwt_params(kid, api_key, token_url) -> dict:
             "jti": str(uuid.uuid4()),
             "aud": token_url,
             "exp": int(time()) + 300,
+        },
+    }
+
+
+@pytest.fixture()
+def test_generic_api_response() -> json:
+    return {
+        "page": 1,
+        "per_page": 6,
+        "total": 12,
+        "total_pages": 2,
+        "data": [
+            {
+                "id": 1,
+                "email": "george.bluth@reqres.in",
+                "first_name": "George",
+                "last_name": "Bluth",
+                "avatar": "https://reqres.in/img/faces/1-image.jpg",
+            },
+            {
+                "id": 2,
+                "email": "janet.weaver@reqres.in",
+                "first_name": "Janet",
+                "last_name": "Weaver",
+                "avatar": "https://reqres.in/img/faces/2-image.jpg",
+            },
+            {
+                "id": 3,
+                "email": "emma.wong@reqres.in",
+                "first_name": "Emma",
+                "last_name": "Wong",
+                "avatar": "https://reqres.in/img/faces/3-image.jpg",
+            },
+            {
+                "id": 4,
+                "email": "eve.holt@reqres.in",
+                "first_name": "Eve",
+                "last_name": "Holt",
+                "avatar": "https://reqres.in/img/faces/4-image.jpg",
+            },
+            {
+                "id": 5,
+                "email": "charles.morris@reqres.in",
+                "first_name": "Charles",
+                "last_name": "Morris",
+                "avatar": "https://reqres.in/img/faces/5-image.jpg",
+            },
+            {
+                "id": 6,
+                "email": "tracey.ramos@reqres.in",
+                "first_name": "Tracey",
+                "last_name": "Ramos",
+                "avatar": "https://reqres.in/img/faces/6-image.jpg",
+            },
+        ],
+        "support": {
+            "url": "https://reqres.in/#support-heading",
+            "text": "To keep ReqRes free, contributions towards server costs are appreciated!",
         },
     }
