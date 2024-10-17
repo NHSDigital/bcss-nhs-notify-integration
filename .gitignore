@@ -12,6 +12,9 @@ version.json
 
 # Please, add your custom content below!
 .env
-jwtRS512.key
-jwtRS512.pem
 __pycache__/
+*.pem
+*.key
+*/venv/
+
+.DS_Store
