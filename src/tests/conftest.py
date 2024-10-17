@@ -3,8 +3,11 @@ import json
 import uuid
 from dotenv import dotenv_values
 from time import time
+from services.BaseAPIClient import BaseAPIClient
 
 config = dotenv_values("../.env")
+
+#### LOCAL ENV FIXTURES ####
 
 
 @pytest.fixture()
@@ -37,6 +40,22 @@ def private_key_path() -> str:
     return config.get("PRIVATE_KEY_PATH")
 
 
+#### CLASS FIXTURES ####
+
+
+@pytest.fixture()
+def base_api_client_token(token_url) -> BaseAPIClient:
+    return BaseAPIClient(token_url)
+
+
+@pytest.fixture()
+def base_api_client_notify(nhs_notify_base_url) -> BaseAPIClient:
+    return BaseAPIClient(nhs_notify_base_url)
+
+
+#### API FIXTURES ####
+
+
 @pytest.fixture()
 def request_headers() -> dict:
     return {
@@ -61,6 +80,9 @@ def request_body() -> json:
     }
 
 
+#### MESSAGE FIXTURES #####
+
+
 @pytest.fixture()
 def test_recipient() -> dict:
     return {
@@ -82,20 +104,7 @@ def test_notify_message_base() -> json:
     }
 
 
-@pytest.fixture()
-def test_notify_message_single() -> json:
-    return {
-        "data": {
-            "type": "Message",
-            "attributes": {
-                "routingPlanId": "test_routing_config_id",
-                "messageReference": str(uuid.uuid4()),
-                "recipient": {"nhsNumber": "9990548609", "dateOfBirth": "1932-01-06"},
-                "originator": {"odsCode": "X26"},
-                "personalisation": {"custom": "value"},
-            },
-        }
-    }
+#### AUTH FIXTURES ####
 
 
 @pytest.fixture()
@@ -111,6 +120,66 @@ def test_jwt_params(kid, api_key, token_url) -> dict:
             "aud": token_url,
             "exp": int(time()) + 300,
         },
+    }
+
+
+#### UTIL MOCK RESPONSES ####
+
+
+@pytest.fixture()
+def generate_notify_single_mock_response() -> json:
+    return {
+        "data": {
+            "type": "Message",
+            "attributes": {
+                "routingPlanId": "test_routing_config_id",
+                "messageReference": str(uuid.uuid4()),
+                "recipient": {"nhsNumber": "9990548609", "dateOfBirth": "1932-01-06"},
+                "originator": {"odsCode": "X26"},
+                "personalisation": {"custom": "value"},
+            },
+        }
+    }
+
+
+#### API CALL MOCK RESPONSES ####
+
+
+@pytest.fixture()
+def single_message_request_mock_response() -> json:
+    return {
+        "data": {
+            "attributes": {
+                "messageReference": "e69744f8-d288-4e27-b5fb-25c7c6f8cb14",
+                "messageStatus": "created",
+                "routingPlan": {
+                    "version": "oCvakVm0FA_z3Z1H6C5ekHGffqYaqVCs",
+                    "id": "c3f31ae4-1532-46df-b121-3503db6b32d6",
+                },
+                "timestamps": {"created": "2024-10-02T14:38:11.278Z"},
+            },
+            "links": {
+                "self": "https://int.api.service.nhs.uk/comms/v1/messages/2msz6DlaaPNar5X6MwWHtbegAaV"
+            },
+            "id": "2msz6DlaaPNar5X6MwWHtbegAaV",
+            "type": "Message",
+        }
+    }
+
+
+def batch_message_request_mock_response() -> json:
+    return {
+        "data": {
+            "type": "MessageBatch",
+            "id": "2mpxCN9i0yXQY9ZnL6uwC85Nr6x",
+            "attributes": {
+                "messageBatchReference": "0e8a0d1d-5fa3-4bfd-ac9f-9c3229411574",
+                "routingPlan": {
+                    "id": "c3f31ae4-1532-46df-b121-3503db6b32d6",
+                    "version": "oCvakVm0FA_z3Z1H6C5ekHGffqYaqVCs",
+                },
+            },
+        }
     }
 
 
