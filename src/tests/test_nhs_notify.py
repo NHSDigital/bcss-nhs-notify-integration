@@ -20,11 +20,11 @@ class TestNHSNotify:
     def test_send_single_message(
         self,
         mocker,
-        routing_config_id,
         test_recipient,
         generate_notify_single_mock_response,
         single_message_request_mock_response,
     ):
+        test_routing_config_id = "test_routing_config_id"
 
         util = Util()
         mocker.patch.object(
@@ -41,26 +41,25 @@ class TestNHSNotify:
 
         response = self.nhs_notify.send_single_message(
             "test_access_token",
-            routing_config_id,
+            test_routing_config_id,
             test_recipient,
         )
         assert type(response) == dict
-        assert response["data"]["attributes"]["messageStatus"] == "created"
-        assert response["data"]["attributes"]["routingPlan"]["id"] == routing_config_id
-
+        assert response["data"]["type"] == "Message"
+        assert (
+            response["data"]["attributes"]["routingPlan"]["id"]
+            == test_routing_config_id
+        )
         # Correct setup correct access token, mock correct request body
-        # Mock request
-        pass
 
-    #### Keep working on this one after updating index
     def test_send_batch_message(
         self,
         mocker,
-        routing_config_id,
-        test_recipient,
+        test_recipient_batch,
         generate_notify_batch_mock_response,
         batch_message_request_mock_response,
     ):
+        test_routing_config_id = "test_routing_config_id"
 
         util = Util()
         mocker.patch.object(
@@ -76,15 +75,15 @@ class TestNHSNotify:
         )
 
         response = self.nhs_notify.send_batch_message(
-            routing_config_id,
-            test_recipient,
+            "test_access_token",
+            test_routing_config_id,
+            test_recipient_batch,
         )
-        assert type(response) == dict
-        assert response["data"]["attributes"]["messageStatus"] == "created"
-        assert response["data"]["attributes"]["routingPlan"]["id"] == routing_config_id
-        # Incorrect/missing access token
-        # Mock request
-        pass
+        assert response["data"]["type"] == "MessageBatch"
+        assert (
+            response["data"]["attributes"]["routingPlan"]["id"]
+            == test_routing_config_id
+        )
 
     def test_send_single_message_fail_request_body(self):
         # Incorrect/missing request body

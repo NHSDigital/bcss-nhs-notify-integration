@@ -92,6 +92,14 @@ def test_recipient() -> dict:
 
 
 @pytest.fixture()
+def test_recipient_batch() -> dict:
+    return [
+        {"NHS#": "9990548609", "dob": "1932-01-06"},
+        {"NHS#": "9800100369", "dob": "1983-12-03"},
+    ]
+
+
+@pytest.fixture()
 def test_notify_message_base() -> json:
     return {
         "messageReference": str(uuid.uuid4()),
@@ -133,10 +141,34 @@ def generate_notify_single_mock_response() -> json:
             "type": "Message",
             "attributes": {
                 "routingPlanId": "test_routing_config_id",
-                "messageReference": str(uuid.uuid4()),
+                "messageReference": "test_message_reference",
                 "recipient": {"nhsNumber": "9990548609", "dateOfBirth": "1932-01-06"},
                 "originator": {"odsCode": "X26"},
                 "personalisation": {"custom": "value"},
+            },
+        }
+    }
+
+
+@pytest.fixture()
+def generate_notify_batch_mock_response() -> json:
+    return {
+        "data": {
+            "type": "MessageBatch",
+            "attributes": {
+                "routingPlanId": "test_routing_config_id",
+                "messageBatchReference": "test_message_batch_reference",
+                "messages": [
+                    {
+                        "messageReference": "703b8008-545d-4a04-bb90-1f2946ce1575",
+                        "recipient": {
+                            "nhsNumber": "9990548609",
+                            "dateOfBirth": "1932-01-06",
+                        },
+                        "originator": {"odsCode": "X26"},
+                        "personalisation": {"custom": "value"},
+                    }
+                ],
             },
         }
     }
@@ -154,7 +186,7 @@ def single_message_request_mock_response() -> json:
                 "messageStatus": "created",
                 "routingPlan": {
                     "version": "oCvakVm0FA_z3Z1H6C5ekHGffqYaqVCs",
-                    "id": "c3f31ae4-1532-46df-b121-3503db6b32d6",
+                    "id": "test_routing_config_id",
                 },
                 "timestamps": {"created": "2024-10-02T14:38:11.278Z"},
             },
@@ -167,6 +199,7 @@ def single_message_request_mock_response() -> json:
     }
 
 
+@pytest.fixture()
 def batch_message_request_mock_response() -> json:
     return {
         "data": {
@@ -175,7 +208,7 @@ def batch_message_request_mock_response() -> json:
             "attributes": {
                 "messageBatchReference": "0e8a0d1d-5fa3-4bfd-ac9f-9c3229411574",
                 "routingPlan": {
-                    "id": "c3f31ae4-1532-46df-b121-3503db6b32d6",
+                    "id": "test_routing_config_id",
                     "version": "oCvakVm0FA_z3Z1H6C5ekHGffqYaqVCs",
                 },
             },

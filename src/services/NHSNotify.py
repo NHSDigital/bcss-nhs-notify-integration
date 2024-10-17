@@ -50,7 +50,7 @@ class NHSNotify:
             json=requestBody,
             headers=headers,
         )
-        return response
+        return response.json()
 
     def get_message_status(self, access_token: str, message_id: str) -> dict:
         headers = {
