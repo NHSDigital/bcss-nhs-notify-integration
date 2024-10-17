@@ -12,12 +12,12 @@ bcss_comms_manager = BCSSCommsManager()
 
 @app.route('/send-pre-invitation', methods=['POST'])
 def send_pre_invitation():
-    request_data = request.get_json() 
+    request_data = request.get_json()
 
     if not request_data:
         return jsonify({"error": "Invalid input"}), 400
 
-    recipients = request_data.get('data') 
+    recipients = request_data.get('data')
 
     response = bcss_comms_manager.send_pre_inviation(os.getenv("ROUTING_PLAN_ID"), recipients)
 
@@ -25,7 +25,6 @@ def send_pre_invitation():
 
 @app.route('/message-status/<message_id>', methods=['GET'])
 def get_message_status(message_id: str):
-    
     response = bcss_comms_manager.get_message_status(message_id)
 
     return jsonify(response), 200

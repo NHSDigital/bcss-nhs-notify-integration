@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 
+
 class MongoDBHandler:
     def __init__(self, uri: str, db_name: str):
         # Connect to MongoDB
