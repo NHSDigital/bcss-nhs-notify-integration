@@ -40,6 +40,21 @@ def private_key_path() -> str:
     return config.get("PRIVATE_KEY_PATH")
 
 
+@pytest.fixture()
+def document_db_uri() -> str:
+    return config.get("DOCUMENT_DB_URI")
+
+
+@pytest.fixture()
+def document_db_name() -> str:
+    return config.get("DOCUMENT_DB_NAME")
+
+
+@pytest.fixture()
+def document_db_collection() -> str:
+    return config.get("DOCUMENT_DB_COLLECTION")
+
+
 #### CLASS FIXTURES ####
 
 
@@ -213,6 +228,66 @@ def batch_message_request_mock_response() -> json:
                 },
             },
         }
+    }
+
+
+@pytest.fixture()
+def notify_missing_auth_request_mock_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-1931948104716186917-c-geu2-10664-3111479-3.0",
+                "code": "CM_DENIED",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
+                },
+                "status": "401",
+                "title": "Access denied",
+                "detail": "Access token missing, invalid or expired, or calling application not configured for this operation.",
+                "source": {"header": "Authorization"},
+            }
+        ]
+    }
+
+
+#### Not possible for our code to do this ####
+# @pytest.fixture()
+# def notify_missing_routing_config_request_mock_response() -> json:
+#     return {
+#         "errors": [
+#             {
+#                 "id": "rrt-1511539508728642326-c-geu2-3781149-506241-6.0",
+#                 "code": "CM_MISSING_VALUE",
+#                 "links": {
+#                     "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
+#                 },
+#                 "status": "400",
+#                 "title": "Missing property",
+#                 "detail": "The property at the specified location is required, but was not present in the request.",
+#                 "source": {
+#                     "pointer": "/data/attributes/routingPlanId"
+#                 }
+#             }
+#         ]
+# }
+
+
+@pytest.fixture()
+def notify_incorrect_routing_config_request_mock_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-347680715282487770-c-geu2-1809628-6172494-2.0",
+                "code": "CM_INVALID_VALUE",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
+                },
+                "status": "400",
+                "title": "Invalid value",
+                "detail": "The property at the specified location does not allow this value.",
+                "source": {"pointer": "/data/attributes/routingPlanId"},
+            }
+        ]
     }
 
 

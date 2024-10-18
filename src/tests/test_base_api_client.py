@@ -84,39 +84,3 @@ class TestBaseAPIClient:
     #     responseJson = response.json()
     #     assert response.status_code == 201
     #     assert responseJson["data"]["type"] == "Message"
-
-    # # Test request should fail without auth header
-    # def test_make_request_missing_auth_header(
-    #     self, request_body: json, request_headers: dict, routing_config_id
-    # ):
-    #     request_body["data"]["attributes"]["routingPlanId"] = routing_config_id
-    #     response = self.base_api_client.make_request(
-    #         method="POST",
-    #         endpoint="/v1/messages",
-    #         json=request_body,
-    #         data=None,
-    #         headers=request_headers,
-    #     )
-    #     responseJson = response.json()
-    #     assert response.status_code == 401
-    #     assert responseJson["errors"][0]["code"] == "CM_DENIED"
-
-    # # Test request should fail without routing_config_id
-    # def test_make_request_missing_routing_config_id(
-    #     self, request_body: json, request_headers: dict
-    # ):
-    #     request_headers["authorization"] = f"Bearer {self.access_token}"
-    #     response = self.base_api_client.make_request(
-    #         method="POST",
-    #         endpoint="/v1/messages",
-    #         json=request_body,
-    #         data=None,
-    #         headers=request_headers,
-    #     )
-    #     responseJson = response.json()
-    #     assert response.status_code == 400
-    #     assert responseJson["errors"][0]["code"] == "CM_MISSING_VALUE"
-    #     assert (
-    #         responseJson["errors"][0]["source"]["pointer"]
-    #         == "/data/attributes/routingPlanId"
-    #     )

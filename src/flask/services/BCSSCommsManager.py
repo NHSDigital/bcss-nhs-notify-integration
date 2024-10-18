@@ -6,6 +6,7 @@ import os
 
 
 class BCSSCommsManager:
+
     def __init__(self):
         self.nhs_notify: NHSNotify = NHSNotify(os.getenv("NHS_NOTIFY_BASE_URL"))
         self.auth_manager: AuthManager = AuthManager()
@@ -15,13 +16,10 @@ class BCSSCommsManager:
             os.getenv("DOCUMENT_DB_COLLECTION"),
         )
 
-    def send_pre_invitation(
+    def send_pre_inviation(
         self, routing_config_id: str, recipients: list[dict]
     ) -> dict:
         access_token: str = self.auth_manager.get_access_token()
-
-        # If recipients < 1 or missing, return error we can test for
-        # If routing config ID missing, return error we can test for
 
         if len(recipients) == 1:
             single_message_response = self.nhs_notify.send_single_message(
@@ -37,15 +35,13 @@ class BCSSCommsManager:
             return batch_message_response
 
     def get_message_status(self, message_id: str) -> dict:
-        # If message_id missing, return error we can test for (Notify returns 403)
         access_token: str = self.auth_manager.get_access_token()
         response = self.nhs_notify.get_message_status(access_token, message_id)
         return response
 
     def get_nhs_app_account_details(self, ods_code: str, page_number: str):
-        # If ods_code missing, return error we can test for (Notify returns 400 missing ods code)
         access_token: str = self.auth_manager.get_access_token()
-        response = self.nhs_notify.get_NHS_account_details(
+        response = self.nhs_notify.get_NHS_acccount_details(
             access_token, ods_code, page_number
         )
         return response

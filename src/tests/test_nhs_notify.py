@@ -85,52 +85,126 @@ class TestNHSNotify:
             == test_routing_config_id
         )
 
-    def test_send_single_message_fail_request_body(self):
-        # Incorrect/missing request body
-        # Mock request
-        pass
+    # Test request should fail without auth header
+    def test_make_request_missing_auth_header(
+        self,
+        mocker,
+        test_recipient,
+        generate_notify_single_mock_response,
+        notify_missing_auth_request_mock_response,
+    ):
+        test_routing_config_id = "test_routing_config_id"
 
-    def test_send_single_message_fail_access_token(self):
-        # Correct setup correct access token, mock correct request body
-        # Mock request
-        pass
+        util = Util()
+        mocker.patch.object(
+            util,
+            "generate_single_message_request_body",
+            return_value=generate_notify_single_mock_response,
+        )
 
-    def test_send_batch_message_fail_access_token(self):
-        # Incorrect/missing access token
-        # Mock request
-        pass
+        mock_response = mocker.MagicMock()
+        mock_response.json.return_value = notify_missing_auth_request_mock_response
+        mocker.patch.object(
+            self.nhs_notify.api_client, "make_request", return_value=mock_response
+        )
 
-    def test_send_batch_message_fail_request_body(self):
-        # Incorrect/missing request body
-        # Mock request
-        pass
+        response = self.nhs_notify.send_single_message(
+            "test_access_token",
+            test_routing_config_id,
+            test_recipient,
+        )
+        assert response["errors"][0]["status"] == "401"
+        assert response["errors"][0]["code"] == "CM_DENIED"
 
-    def test_get_message_status(self):
-        # Correct setup correct access token, mock correct request body
-        # Mock request
-        pass
+    # Test request should fail without routing_config_id
+    def test_make_request_incorrect_routing_config(
+        self,
+        mocker,
+        test_recipient,
+        generate_notify_single_mock_response,
+        notify_incorrect_routing_config_request_mock_response,
+    ):
 
-    def test_get_message_status_fail_access_token(self):
-        # Incorrect/missing access token
-        # Mock request
-        pass
+        util = Util()
+        mocker.patch.object(
+            util,
+            "generate_single_message_request_body",
+            return_value=generate_notify_single_mock_response,
+        )
 
-    def test_get_NHS_account_details(self):
-        # Correct setup correct access token, mock correct request body
-        # Mock request
-        pass
+        mock_response = mocker.MagicMock()
+        mock_response.json.return_value = (
+            notify_incorrect_routing_config_request_mock_response
+        )
+        mocker.patch.object(
+            self.nhs_notify.api_client, "make_request", return_value=mock_response
+        )
 
-    def test_get_NHS_account_details_fail_access_token(self):
-        # Incorrect/missing access token
-        # Mock request
-        pass
+        response = self.nhs_notify.send_single_message(
+            "test_access_token",
+            "",
+            test_recipient,
+        )
+        assert response["errors"][0]["status"] == "400"
+        assert response["errors"][0]["code"] == "CM_INVALID_VALUE"
 
-    def test_get_NHS_account_details_fail_ods_code(self):
-        # Incorrect/missing ods code
-        # Mock request
-        pass
+    # Test for empty recipients list
+    def test_make_request_empty_recipients(
+        self,
+        mocker,
+        generate_notify_single_mock_response,
+        notify_empty_recipients_request_mock_response,
+    ):
 
-    def test_get_NHS_account_details_fail_resource_missing(self):
-        # Force a 404 response
-        # Mock request
-        pass
+        util = Util()
+        mocker.patch.object(
+            util,
+            "generate_single_message_request_body",
+            return_value=generate_notify_single_mock_response,
+        )
+
+        mock_response = mocker.MagicMock()
+        mock_response.json.return_value = notify_empty_recipients_request_mock_response
+        mocker.patch.object(
+            self.nhs_notify.api_client, "make_request", return_value=mock_response
+        )
+
+        response = self.nhs_notify.send_single_message(
+            "test_access_token",
+            "test_routing_config_id",
+            [],
+        )
+        assert response["errors"][0]["status"] == "400"
+        assert response["errors"][0]["code"] == "CM_INVALID_VALUE"
+
+
+####################################################################################################
+# def test_get_message_status(self):
+#     # Correct setup correct access token, mock correct request body
+#     # Mock request
+#     pass
+
+# def test_get_message_status_fail_access_token(self):
+#     # Incorrect/missing access token
+#     # Mock request
+#     pass
+
+# def test_get_NHS_account_details(self):
+#     # Correct setup correct access token, mock correct request body
+#     # Mock request
+#     pass
+
+# def test_get_NHS_account_details_fail_access_token(self):
+#     # Incorrect/missing access token
+#     # Mock request
+#     pass
+
+# def test_get_NHS_account_details_fail_ods_code(self):
+#     # Incorrect/missing ods code
+#     # Mock request
+#     pass
+
+# def test_get_NHS_account_details_fail_resource_missing(self):
+#     # Force a 404 response
+#     # Mock request
+#     pass

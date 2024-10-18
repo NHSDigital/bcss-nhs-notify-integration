@@ -5,32 +5,32 @@
 {% endblock %}
 
 {% block body%}
-<div id="requests">
-    <div id="POSTS">
-        <h2>POST Requests</h2>
+<section>
+    <h1>Send Batch Pre Inviation</h1>
+    <p><strong>Endpoint:</strong> <code>/send-pre-invitation</code></p>
+    <p><strong>Method:</strong> <code>POST</code></p>
+    <button onclick="sendBatchPreInvitationRequest()">Send Request</button>
+    <div id="batchPreInvitationRequestBodyDisplay"></div>
+    <div id="batchPreInvitationResponseDisplay"></div>
+</section>
 
-        <button type="button" class="button sendBatch"> <a href="/create_message_batch">Send Message Batch</a></button> <br>
-        <button type="button" class="button sendSingle"><a href="/create_message_single">Send Single Message</a></button>
-    </div>
+<section>
+    <h1>Send Single Pre Inviation</h1>
+    <p><strong>Endpoint:</strong> <code>/send-pre-invitation</code></p>
+    <p><strong>Method:</strong> <code>POST</code></p>
+    <button onclick="sendSinglePreInvitationRequest()">Send Request</button>
+    <div id="singlePreInvitationRequestBodyDisplay"></div>
+    <div id="singlePreInvitationResponseDisplay"></div>
+</section>
 
-    <div id="GETS">
-        <h2>GET Requests</h2>
-
-        <div>
-            <form action="{{ url_for('get_message_status') }}" method="POST">
-                Message ID <input name="messageID" value="2msn7Pgg7lhUukLidr0ENr6oBbL"><br>
-                <button type="submit" class="button getStatus">Get Message Status</button>
-            </form>
-        </div>
-        <br>
-        </div>
-            <form action="{{ url_for('get_nhs_app_details') }}" method="POST">
-                ODS Code <input name="ODSCode" value="T00001">
-                Page number <input name="PageNumber" value="1"><br>
-                <button type="submit" class="button getAppDetails">Get NHS App Account Details</button>
-            </form>
-        </div>
-    </div>
-</div>
+<section>
+    <h2>Get Message Status</h2>
+    <p><strong>Endpoint:</strong><code>/message-status/{message_id}</code></p>
+    <p><strong>Method:</strong> <code>GET</code></p>
+    <label for="postId">Enter Message ID:</label>
+    <input type="text" id="postId">
+    <button onclick="sendGetMessageStatusRequest()">Send GET Request</button>
+    <div id="getMessageStatusResponseDisplay"></div>
+</section>
 
 {% endblock %}

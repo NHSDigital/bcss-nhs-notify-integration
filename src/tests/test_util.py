@@ -14,11 +14,9 @@ class TestUtil:
         message_base = Util.generate_message(test_recipient)
         assert message_base["recipient"]["nhsNumber"] == "9990548609"
         assert message_base["recipient"]["dateOfBirth"] == "1932-01-06"
-        # assert message_base == test_notify_message_base - currently need a way to handle UUIDs
+        # assert message_base == test_notify_message_base - need a way to handle UUIDs?
 
-    def test_generate_single_message_request_body(
-        self, test_recipient, test_notify_message_single
-    ):
+    def test_generate_single_message_request_body(self, test_recipient):
         message_request_single = Util.generate_single_message_request_body(
             test_recipient, "test_routing_config_id"
         )
@@ -28,7 +26,7 @@ class TestUtil:
             message_request_single["data"]["attributes"]["routingPlanId"]
             == "test_routing_config_id"
         )
-        # assert message_request_single == test_notify_message_single - currently need a way to handle UUIDs
+        # assert message_request_single == test_notify_message_single - need a way to handle UUIDs?
 
     def test_generate_batch_message_request_body(self, test_recipient):
         message_request_batch = Util.generate_batch_message_request_body(
