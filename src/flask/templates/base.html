@@ -14,8 +14,8 @@
     {% block body %}{% endblock %}
   </body>
   <script>
-    const PRE_INVITAION_URL = "http://localhost:5001/send-pre-invitation"
-    const PRE_INVITAION_HEADERS = {
+    const PRE_INVITATION_URL = "http://localhost:5001/send-pre-invitation"
+    const PRE_INVITATION_HEADERS = {
       "Content-Type": "application/json",
     }
 
@@ -38,9 +38,9 @@
               <pre>${JSON.stringify(BATCH_NHS_NUMBER_REQ_BODY, null, 2)}</pre>
           `;
 
-      fetch(PRE_INVITAION_URL, {
+      fetch(PRE_INVITATION_URL, {
         method: "POST",
-        headers: PRE_INVITAION_HEADERS,
+        headers: PRE_INVITATION_HEADERS,
         body: JSON.stringify(BATCH_NHS_NUMBER_REQ_BODY),
       })
         .then((response) => response.json())
@@ -78,9 +78,9 @@
               <pre>${JSON.stringify(SINGLE_NHS_NUMBER_REQ_BODY, null, 2)}</pre>
           `;
 
-      fetch(PRE_INVITAION_URL, {
+      fetch(PRE_INVITATION_URL, {
         method: "POST",
-        headers: PRE_INVITAION_HEADERS,
+        headers: PRE_INVITATION_HEADERS,
         body: JSON.stringify(SINGLE_NHS_NUMBER_REQ_BODY),
       })
         .then((response) => response.json())
