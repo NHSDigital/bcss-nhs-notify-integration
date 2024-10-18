@@ -14,37 +14,34 @@
     {% block body %}{% endblock %}
   </body>
   <script>
-    function sendBatchPreInvitationRequest() {
-      // Hardcoded request body
-      const requestBody = {
-        data: [
-          {
-            "NHS#": "9990548609",
-            dob: "1932-01-06",
-          },
-          {
-            "NHS#": "9800100369",
-            dob: "1983-12-03",
-          },
-        ],
-      };
+    const PRE_INVITATION_URL = "http://localhost:5001/send-pre-invitation"
+    const PRE_INVITATION_HEADERS = {
+      "Content-Type": "application/json",
+    }
 
+    const SINGLE_NHS_NUMBER_ARR = ["9990548609"] // <-- Must be of length 1, otherwise I will cause a batch message to be sent
+    const BATCH_NHS_NUMBER_ARR = ["9990548609", "9800100369"]
+
+    const SINGLE_NHS_NUMBER_REQ_BODY = {
+      data: SINGLE_NHS_NUMBER_ARR,
+    }
+    const BATCH_NHS_NUMBER_REQ_BODY = {
+      data: BATCH_NHS_NUMBER_ARR,
+    }
+
+    function sendBatchPreInvitationRequest() {
       // Display the request body in JSON format before sending the request
       document.getElementById(
         "batchPreInvitationRequestBodyDisplay"
       ).innerHTML = `
               <h3>Request Body:</h3>
-              <pre>${JSON.stringify(requestBody, null, 2)}</pre>
+              <pre>${JSON.stringify(BATCH_NHS_NUMBER_REQ_BODY, null, 2)}</pre>
           `;
 
-      const url = "http://localhost:5001/send-pre-invitation"; // Public test API
-
-      fetch(url, {
+      fetch(PRE_INVITATION_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
+        headers: PRE_INVITATION_HEADERS,
+        body: JSON.stringify(BATCH_NHS_NUMBER_REQ_BODY),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -70,12 +67,7 @@
     function sendSinglePreInvitationRequest() {
       // Hardcoded request body
       const requestBody = {
-        data: [
-          {
-            "NHS#": "9990548609",
-            dob: "1932-01-06",
-          },
-        ],
+        data: SINGLE_NHS_NUMBER_ARR,
       };
 
       // Display the request body in JSON format before sending the request
@@ -83,17 +75,13 @@
         "singlePreInvitationRequestBodyDisplay"
       ).innerHTML = `
               <h3>Request Body:</h3>
-              <pre>${JSON.stringify(requestBody, null, 2)}</pre>
+              <pre>${JSON.stringify(SINGLE_NHS_NUMBER_REQ_BODY, null, 2)}</pre>
           `;
 
-      const url = "http://localhost:5001/send-pre-invitation"; // Public test API
-
-      fetch(url, {
+      fetch(PRE_INVITATION_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
+        headers: PRE_INVITATION_HEADERS,
+        body: JSON.stringify(SINGLE_NHS_NUMBER_REQ_BODY),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -118,10 +106,10 @@
 
     function sendGetMessageStatusRequest() {
       // Get the post ID from the input field
-      const postId = document.getElementById("postId").value;
+      const messageId = document.getElementById("messageId").value;
 
       // Construct the URL with the path parameter
-      const url = `http://localhost:5001/message-status/${postId}`; // Public test API
+      const url = `http://localhost:5001/message-status/${messageId}`; // Public test API
 
       fetch(url, {
         method: "GET",

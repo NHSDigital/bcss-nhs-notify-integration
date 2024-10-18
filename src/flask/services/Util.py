@@ -7,7 +7,7 @@ class Util:
 
     @staticmethod
     def generate_single_message_request_body(
-        recipient: dict, routing_config_id: str
+        recipient: str, routing_config_id: str
     ) -> dict:
         body = {
             "data": {
@@ -22,7 +22,7 @@ class Util:
 
     @staticmethod
     def generate_batch_message_request_body(
-        routing_config_id: str, message_batch_reference: str, recipients: dict
+        routing_config_id: str, message_batch_reference: str, recipients: list[str]
     ) -> dict:
         return {
             "data": {
@@ -36,13 +36,10 @@ class Util:
         }
 
     @staticmethod
-    def generate_message(recipient: dict) -> dict:
+    def generate_message(recipient: str) -> dict:
         return {
             "messageReference": str(uuid.uuid4()),
-            "recipient": {
-                "nhsNumber": recipient["NHS#"],
-                "dateOfBirth": recipient["dob"],
-            },
+            "recipient": {"nhsNumber": recipient},
             "originator": {"odsCode": "X26"},
             "personalisation": {"custom": "value"},
         }

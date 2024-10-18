@@ -16,9 +16,7 @@ class BCSSCommsManager:
             os.getenv("DOCUMENT_DB_COLLECTION"),
         )
 
-    def send_pre_inviation(
-        self, routing_config_id: str, recipients: list[dict]
-    ) -> dict:
+    def send_pre_inviation(self, routing_config_id: str, recipients: list[str]) -> dict:
         access_token: str = self.auth_manager.get_access_token()
 
         if len(recipients) == 1:
