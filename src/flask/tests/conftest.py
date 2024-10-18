@@ -3,11 +3,11 @@ import json
 import uuid
 from dotenv import dotenv_values
 from time import time
-from services.BaseAPIClient import BaseAPIClient
-from services.NHSNotify import NHSNotify
-from services.BCSSCommsManager import BCSSCommsManager
-from services.AuthManager import AuthManager
-from services.DataAccess import DataAccess
+from services.base_api_client import BaseAPIClient
+from services.nhs_notify import NHSNotify
+from services.bcss_comms_manager import BCSSCommsManager
+from services.auth_manager import AuthManager
+from services.data_access import DataAccess
 
 config = dotenv_values("../.env")
 

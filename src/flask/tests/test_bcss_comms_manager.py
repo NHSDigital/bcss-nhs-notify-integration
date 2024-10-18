@@ -1,8 +1,3 @@
-from services.NHSNotify import NHSNotify
-from services.AuthManager import AuthManager
-from services.DataAccess import DataAccess
-
-
 class TestBCSSCommsManager:
     def test_initialization(
         self,

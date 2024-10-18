@@ -1,5 +1,5 @@
 from dotenv import dotenv_values
-from services.AuthManager import AuthManager
+from services.auth_manager import AuthManager
 
 
 class TestAuthManager:

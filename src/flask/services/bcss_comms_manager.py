@@ -1,6 +1,6 @@
-from .NHSNotify import NHSNotify
-from .AuthManager import AuthManager
-from .DataAccess import DataAccess
+from .nhs_notify import NHSNotify
+from .auth_manager import AuthManager
+from .data_access import DataAccess
 
 import os
 

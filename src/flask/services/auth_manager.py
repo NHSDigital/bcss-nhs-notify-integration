@@ -4,8 +4,8 @@ import uuid
 from dotenv import dotenv_values
 import os
 
-from .BaseAPIClient import BaseAPIClient
-from .Util import Util
+from .base_api_client import BaseAPIClient
+from .util import Util
 
 config = dotenv_values("../.env")
 

@@ -4,7 +4,6 @@ from datetime import datetime, timezone, timedelta
 
 
 class Util:
-
     @staticmethod
     def generate_single_message_request_body(
         recipient: dict, routing_config_id: str

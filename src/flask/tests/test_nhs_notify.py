@@ -1,5 +1,4 @@
-from services.NHSNotify import NHSNotify
-from services.Util import Util
+from services.util import Util
 
 
 class TestNHSNotify:

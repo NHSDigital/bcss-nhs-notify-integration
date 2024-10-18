@@ -1,7 +1,4 @@
-from services.Util import Util
-import jwt
-import json
-import pytest
+from services.util import Util
 
 
 class TestUtil:
