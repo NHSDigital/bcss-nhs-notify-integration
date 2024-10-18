@@ -1,4 +1,4 @@
-from .MongoDBHandler import MongoDBHandler
+from .mongo_db_handler import MongoDBHandler
 from dotenv import dotenv_values
 
 
