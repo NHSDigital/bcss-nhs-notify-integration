@@ -10,20 +10,24 @@ app = Flask(__name__)
 
 bcss_comms_manager = BCSSCommsManager()
 
-@app.route('/send-pre-invitation', methods=['POST'])
+
+@app.route("/send-pre-invitation", methods=["POST"])
 def send_pre_invitation():
     request_data = request.get_json()
 
     if not request_data:
         return jsonify({"error": "Invalid input"}), 400
 
-    recipients = request_data.get('data')
+    recipients = request_data.get("data")
 
-    response = bcss_comms_manager.send_pre_inviation(os.getenv("ROUTING_PLAN_ID"), recipients)
+    response = bcss_comms_manager.send_pre_invitation(
+        os.getenv("ROUTING_PLAN_ID"), recipients
+    )
 
     return jsonify(response["data"]), 200
 
-@app.route('/message-status/<message_id>', methods=['GET'])
+
+@app.route("/message-status/<message_id>", methods=["GET"])
 def get_message_status(message_id: str):
     response = bcss_comms_manager.get_message_status(message_id)
 
@@ -34,6 +38,7 @@ def get_message_status(message_id: str):
 def get_nhs_app_details(ods_code: str, page_number: int):
     response = bcss_comms_manager.get_nhs_app_account_details(ods_code, page_number)
     return response
+
 
 @app.route("/")
 def main():
