@@ -66,6 +66,7 @@ The following software packages, or their equivalents, are expected to be instal
 - [Docker](https://www.docker.com/) container runtime or a compatible tool, e.g. [Podman](https://podman.io/),
 - [asdf](https://asdf-vm.com/) version manager,
 - [GNU make](https://www.gnu.org/software/make/) 3.82 or later,
+- [Git-Crypt] (https://github.com/AGWA/git-crypt) for encryption/decryption
 
 > [!NOTE]<br>
 > The version of GNU make available by default on macOS is earlier than 3.82. You will need to upgrade it or certain `make` tasks will fail. On macOS, you will need [Homebrew](https://brew.sh/) installed, then to install `make`, like so:
@@ -84,6 +85,23 @@ The following software packages, or their equivalents, are expected to be instal
 
 - [Python](https://www.python.org/) required to run Git hooks,
 - [`jq`](https://jqlang.github.io/jq/) a lightweight and flexible command-line JSON processor.
+
+### Encryption / Decryption of Private Keys
+
+[Git-Crypt] (https://github.com/AGWA/git-crypt) has been used to encrypt the private key in this repository, you will need to request a the symmetric secret key to decrypt the private key.
+
+When given the key, use the following command to unlock the files:
+
+```shell
+git-crypt unlock /path/to/key
+```
+
+To check the status of encrypted/non encrypted files, use the following command:
+
+```shell
+git-crypt status
+```
+
 
 ### Configuration
 
