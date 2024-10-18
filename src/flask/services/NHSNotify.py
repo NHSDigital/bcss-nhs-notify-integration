@@ -10,7 +10,7 @@ class NHSNotify:
         self.api_client = BaseAPIClient(base_url)
 
     def send_single_message(
-        self, access_token: str, routing_config_id: str, recipients: list[dict]
+        self, access_token: str, routing_config_id: str, recipient: str
     ) -> dict:
         headers = {
             "content-type": "application/vnd.api+json",
@@ -20,7 +20,7 @@ class NHSNotify:
         }
 
         requestBody: dict = Util.generate_single_message_request_body(
-            recipients, routing_config_id
+            recipient, routing_config_id
         )
 
         response: dict = self.api_client.make_request(
@@ -29,7 +29,7 @@ class NHSNotify:
         return response
 
     def send_batch_message(
-        self, access_token: str, routing_config_id: str, recipients: list[dict]
+        self, access_token: str, routing_config_id: str, recipients: list[str]
     ) -> dict:
         headers = {
             "content-type": "application/vnd.api+json",
