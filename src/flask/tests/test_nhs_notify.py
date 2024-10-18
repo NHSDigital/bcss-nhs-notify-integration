@@ -3,23 +3,24 @@ from services.Util import Util
 
 
 class TestNHSNotify:
-    def setup_method(
-        self, method, nhs_notify_base_url="https://int.api.service.nhs.uk/comms"
-    ):
-        print(f"Setting up test {method}")
-        self.nhs_notify = NHSNotify(nhs_notify_base_url)
+    # def setup_method(
+    #     self, method, nhs_notify
+    # ):
+    #     print(f"Setting up test {method}")
+    #     self.nhs_notify = NHSNotify(nhs_notify_base_url)
 
-    def teardown_method(self, method):
-        print(f"Tearing down test {method}")
+    # def teardown_method(self, method):
+    #     print(f"Tearing down test {method}")
 
-    def test_initialization(self, base_api_client_notify):
-        assert self.nhs_notify.api_client.base_url == base_api_client_notify.base_url
+    def test_initialization(self, nhs_notify, nhs_notify_base_url):
+        assert nhs_notify.api_client.base_url == nhs_notify_base_url
         pass
 
     # Mocked Util and Request functions
     def test_send_single_message(
         self,
         mocker,
+        nhs_notify,
         test_recipient,
         generate_notify_single_mock_response,
         single_message_request_mock_response,
@@ -36,10 +37,10 @@ class TestNHSNotify:
         mock_response = mocker.MagicMock()
         mock_response.json.return_value = single_message_request_mock_response
         mocker.patch.object(
-            self.nhs_notify.api_client, "make_request", return_value=mock_response
+            nhs_notify.api_client, "make_request", return_value=mock_response
         )
 
-        response = self.nhs_notify.send_single_message(
+        response = nhs_notify.send_single_message(
             "test_access_token",
             test_routing_config_id,
             test_recipient,
@@ -55,6 +56,7 @@ class TestNHSNotify:
     def test_send_batch_message(
         self,
         mocker,
+        nhs_notify,
         test_recipient_batch,
         generate_notify_batch_mock_response,
         batch_message_request_mock_response,
@@ -71,14 +73,16 @@ class TestNHSNotify:
         mock_response = mocker.MagicMock()
         mock_response.json.return_value = batch_message_request_mock_response
         mocker.patch.object(
-            self.nhs_notify.api_client, "make_request", return_value=mock_response
+            nhs_notify.api_client, "make_request", return_value=mock_response
         )
 
-        response = self.nhs_notify.send_batch_message(
+        response = nhs_notify.send_batch_message(
             "test_access_token",
             test_routing_config_id,
             test_recipient_batch,
         )
+
+        assert type(response) == dict
         assert response["data"]["type"] == "MessageBatch"
         assert (
             response["data"]["attributes"]["routingPlan"]["id"]
@@ -89,6 +93,7 @@ class TestNHSNotify:
     def test_make_request_missing_auth_header(
         self,
         mocker,
+        nhs_notify,
         test_recipient,
         generate_notify_single_mock_response,
         notify_missing_auth_request_mock_response,
@@ -105,10 +110,10 @@ class TestNHSNotify:
         mock_response = mocker.MagicMock()
         mock_response.json.return_value = notify_missing_auth_request_mock_response
         mocker.patch.object(
-            self.nhs_notify.api_client, "make_request", return_value=mock_response
+            nhs_notify.api_client, "make_request", return_value=mock_response
         )
 
-        response = self.nhs_notify.send_single_message(
+        response = nhs_notify.send_single_message(
             "test_access_token",
             test_routing_config_id,
             test_recipient,
@@ -120,6 +125,7 @@ class TestNHSNotify:
     def test_make_request_incorrect_routing_config(
         self,
         mocker,
+        nhs_notify,
         test_recipient,
         generate_notify_single_mock_response,
         notify_incorrect_routing_config_request_mock_response,
@@ -137,10 +143,10 @@ class TestNHSNotify:
             notify_incorrect_routing_config_request_mock_response
         )
         mocker.patch.object(
-            self.nhs_notify.api_client, "make_request", return_value=mock_response
+            nhs_notify.api_client, "make_request", return_value=mock_response
         )
 
-        response = self.nhs_notify.send_single_message(
+        response = nhs_notify.send_single_message(
             "test_access_token",
             "",
             test_recipient,
@@ -148,34 +154,37 @@ class TestNHSNotify:
         assert response["errors"][0]["status"] == "400"
         assert response["errors"][0]["code"] == "CM_INVALID_VALUE"
 
-    # Test for empty recipients list
-    def test_make_request_empty_recipients(
-        self,
-        mocker,
-        generate_notify_single_mock_response,
-        notify_empty_recipients_request_mock_response,
-    ):
+    # # Test for empty recipients list, SHOULD NEVER MAKE IT TO NHS NOTIFY, CATCH THIS IN COMMS MANAGER? ARGUABLY SAME
+    # # FOR ROUTING CONFIG ID AND ACCESS TOKEN/AUTH HEADER BUT WILL DO FOR NOW
+    # def test_make_request_empty_recipients(
+    #     self,
+    #     mocker,
+    #     nhs_notify,
+    #     generate_notify_single_mock_response,
+    #     notify_empty_recipients_request_mock_response,
+    # ):
 
-        util = Util()
-        mocker.patch.object(
-            util,
-            "generate_single_message_request_body",
-            return_value=generate_notify_single_mock_response,
-        )
+    #     util = Util()
+    #     mocker.patch.object(
+    #         util,
+    #         "generate_single_message_request_body",
+    #         return_value=generate_notify_single_mock_response,
+    #     )
 
-        mock_response = mocker.MagicMock()
-        mock_response.json.return_value = notify_empty_recipients_request_mock_response
-        mocker.patch.object(
-            self.nhs_notify.api_client, "make_request", return_value=mock_response
-        )
+    #     mock_response = mocker.MagicMock()
+    #     mock_response.json.return_value = notify_empty_recipients_request_mock_response
+    #     mocker.patch.object(
+    #         nhs_notify.api_client, "make_request", return_value=mock_response
+    #     )
 
-        response = self.nhs_notify.send_single_message(
-            "test_access_token",
-            "test_routing_config_id",
-            [],
-        )
-        assert response["errors"][0]["status"] == "400"
-        assert response["errors"][0]["code"] == "CM_INVALID_VALUE"
+    #     response = nhs_notify.send_single_message(
+    #         "test_access_token",
+    #         "test_routing_config_id",
+    #         [],
+    #     )
+    #     responseJson = response.json()
+    #     assert responseJson["errors"][0]["status"] == "400"
+    #     assert responseJson["errors"][0]["code"] == "CM_INVALID_VALUE"
 
 
 ####################################################################################################

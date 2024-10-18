@@ -4,6 +4,10 @@ import uuid
 from dotenv import dotenv_values
 from time import time
 from services.BaseAPIClient import BaseAPIClient
+from services.NHSNotify import NHSNotify
+from services.BCSSCommsManager import BCSSCommsManager
+from services.AuthManager import AuthManager
+from services.DataAccess import DataAccess
 
 config = dotenv_values("../.env")
 
@@ -16,8 +20,8 @@ def routing_config_id() -> str:
 
 
 @pytest.fixture()
-def nhs_notify_base_url() -> str:
-    return config.get("NHS_NOTIFY_BASE_URL")
+def nhs_notify_base_url():
+    yield config.get("NHS_NOTIFY_BASE_URL")
 
 
 @pytest.fixture()
@@ -55,6 +59,16 @@ def document_db_collection() -> str:
     return config.get("DOCUMENT_DB_COLLECTION")
 
 
+@pytest.fixture()
+def generic_api_url() -> str:
+    return "https://reqres.in"
+
+
+@pytest.fixture()
+def test_routing_config_id() -> str:
+    return "test_routing_config_id"
+
+
 #### CLASS FIXTURES ####
 
 
@@ -64,8 +78,43 @@ def base_api_client_token(token_url) -> BaseAPIClient:
 
 
 @pytest.fixture()
-def base_api_client_notify(nhs_notify_base_url) -> BaseAPIClient:
-    return BaseAPIClient(nhs_notify_base_url)
+def base_api_client_notify(nhs_notify_base_url):
+    yield BaseAPIClient(nhs_notify_base_url)
+
+
+@pytest.fixture()
+def nhs_notify(nhs_notify_base_url):
+    temp_nhs_notify = NHSNotify(nhs_notify_base_url)
+    yield temp_nhs_notify
+
+
+@pytest.fixture()
+def auth_manager():
+    temp_auth_manager = AuthManager()
+    yield temp_auth_manager
+
+
+@pytest.fixture()
+def data_access(document_db_uri, document_db_name, document_db_collection):
+    temp_data_access = DataAccess(
+        document_db_uri, document_db_name, document_db_collection
+    )
+    yield temp_data_access
+
+
+@pytest.fixture()
+def generic_base_api_client(generic_api_url):
+    temp_generic_base_api_client = BaseAPIClient(generic_api_url)
+    yield temp_generic_base_api_client
+
+
+@pytest.fixture()
+def bcss_comms_manager(nhs_notify, auth_manager, data_access):
+    temp_bcss_comms_manager = BCSSCommsManager()
+    temp_bcss_comms_manager.nhs_notify = nhs_notify
+    temp_bcss_comms_manager.auth_manager = auth_manager
+    temp_bcss_comms_manager.data_access = data_access
+    yield temp_bcss_comms_manager
 
 
 #### API FIXTURES ####
@@ -150,12 +199,12 @@ def test_jwt_params(kid, api_key, token_url) -> dict:
 
 
 @pytest.fixture()
-def generate_notify_single_mock_response() -> json:
+def generate_notify_single_mock_response(test_routing_config_id) -> json:
     return {
         "data": {
             "type": "Message",
             "attributes": {
-                "routingPlanId": "test_routing_config_id",
+                "routingPlanId": test_routing_config_id,
                 "messageReference": "test_message_reference",
                 "recipient": {"nhsNumber": "9990548609", "dateOfBirth": "1932-01-06"},
                 "originator": {"odsCode": "X26"},
@@ -166,12 +215,12 @@ def generate_notify_single_mock_response() -> json:
 
 
 @pytest.fixture()
-def generate_notify_batch_mock_response() -> json:
+def generate_notify_batch_mock_response(test_routing_config_id) -> json:
     return {
         "data": {
             "type": "MessageBatch",
             "attributes": {
-                "routingPlanId": "test_routing_config_id",
+                "routingPlanId": test_routing_config_id,
                 "messageBatchReference": "test_message_batch_reference",
                 "messages": [
                     {

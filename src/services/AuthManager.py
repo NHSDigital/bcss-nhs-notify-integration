@@ -7,7 +7,7 @@ import os
 from .BaseAPIClient import BaseAPIClient
 from .Util import Util
 
-config = dotenv_values("../.env")
+config = dotenv_values("/.env")
 
 
 class AuthManager:

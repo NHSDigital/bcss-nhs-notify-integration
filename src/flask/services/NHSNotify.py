@@ -5,7 +5,6 @@ import uuid
 
 
 class NHSNotify:
-
     def __init__(self, base_url: str) -> None:
         self.api_client = BaseAPIClient(base_url)
 
@@ -26,7 +25,7 @@ class NHSNotify:
         response: dict = self.api_client.make_request(
             method="POST", endpoint="/v1/messages", json=requestBody, headers=headers
         )
-        return response
+        return response.json()
 
     def send_batch_message(
         self, access_token: str, routing_config_id: str, recipients: list[dict]
@@ -50,7 +49,7 @@ class NHSNotify:
             json=requestBody,
             headers=headers,
         )
-        return response
+        return response.json()
 
     def get_message_status(self, access_token: str, message_id: str) -> dict:
         headers = {
@@ -64,9 +63,9 @@ class NHSNotify:
             method="GET", endpoint=f"/v1/messages/{message_id}", headers=headers
         )
 
-        return response
+        return response.json()
 
-    def get_NHS_acccount_details(
+    def get_NHS_account_details(
         self, access_token: str, ods_code: str, page_number: str
     ):
         headers = {
@@ -85,4 +84,4 @@ class NHSNotify:
             params=params,
         )
 
-        return response
+        return response.json()
