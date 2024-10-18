@@ -69,6 +69,11 @@ def test_routing_config_id() -> str:
     return "test_routing_config_id"
 
 
+@pytest.fixture()
+def test_message_id() -> str:
+    return "test_message_id"
+
+
 #### CLASS FIXTURES ####
 
 
@@ -152,6 +157,22 @@ def test_recipient() -> dict:
     return {
         "NHS#": "9990548609",
         "dob": "1932-01-06",
+    }
+
+
+@pytest.fixture()
+def test_recipient_missing_nhs_number() -> dict:
+    return {
+        "NHS#": "",
+        "dob": "1932-01-06",
+    }
+
+
+@pytest.fixture()
+def test_recipient_missing_dob() -> dict:
+    return {
+        "NHS#": "9990548609",
+        "dob": "",
     }
 
 
@@ -242,7 +263,7 @@ def generate_notify_batch_mock_response(test_routing_config_id) -> json:
 
 
 @pytest.fixture()
-def single_message_request_mock_response() -> json:
+def single_message_request_mock_response(test_routing_config_id) -> json:
     return {
         "data": {
             "attributes": {
@@ -250,7 +271,7 @@ def single_message_request_mock_response() -> json:
                 "messageStatus": "created",
                 "routingPlan": {
                     "version": "oCvakVm0FA_z3Z1H6C5ekHGffqYaqVCs",
-                    "id": "test_routing_config_id",
+                    "id": test_routing_config_id,
                 },
                 "timestamps": {"created": "2024-10-02T14:38:11.278Z"},
             },
@@ -264,7 +285,7 @@ def single_message_request_mock_response() -> json:
 
 
 @pytest.fixture()
-def batch_message_request_mock_response() -> json:
+def batch_message_request_mock_response(test_routing_config_id) -> json:
     return {
         "data": {
             "type": "MessageBatch",
@@ -272,7 +293,7 @@ def batch_message_request_mock_response() -> json:
             "attributes": {
                 "messageBatchReference": "0e8a0d1d-5fa3-4bfd-ac9f-9c3229411574",
                 "routingPlan": {
-                    "id": "test_routing_config_id",
+                    "id": test_routing_config_id,
                     "version": "oCvakVm0FA_z3Z1H6C5ekHGffqYaqVCs",
                 },
             },
@@ -296,6 +317,87 @@ def notify_missing_auth_request_mock_response() -> json:
                 "source": {"header": "Authorization"},
             }
         ]
+    }
+
+
+@pytest.fixture()
+def notify_missing_nhs_number_mock_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-2709357079573522931-b-geu2-1562214-7061178-2.0",
+                "code": "CM_INVALID_NHS_NUMBER",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify",
+                    "nhsNumbers": "https://www.datadictionary.nhs.uk/attributes/nhs_number.html",
+                },
+                "status": "400",
+                "title": "Invalid nhs number",
+                "detail": "The value provided in this nhsNumber field is not a valid NHS number.",
+                "source": {"pointer": "/data/attributes/recipient/nhsNumber"},
+            }
+        ]
+    }
+
+
+@pytest.fixture()
+def notify_missing_dob_mock_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-48133796090514339-a-geu2-2913303-6913317-2.1",
+                "code": "CM_INVALID_VALUE",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
+                },
+                "status": "400",
+                "title": "Invalid value",
+                "detail": "The property at the specified location does not allow this value.",
+                "source": {"pointer": "/data/attributes/recipient/dateOfBirth"},
+            }
+        ]
+    }
+
+
+# What is currently returned if making a get message status call with no ID (Postman)
+@pytest.fixture()
+def notify_403_forbidden_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-1299718902873520380-b-geu2-375102-2184555-2.0",
+                "code": "CM_FORBIDDEN",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
+                },
+                "status": "403",
+                "title": "Forbidden",
+                "detail": "Client not recognised or not yet onboarded.",
+                "source": {"header": "Authorization"},
+            }
+        ]
+    }
+
+
+@pytest.fixture()
+def notify_get_message_status_response(test_message_id, test_routing_config_id) -> json:
+    return {
+        "data": {
+            "type": "Message",
+            "id": test_message_id,
+            "attributes": {
+                "messageReference": "063cee1b-2740-422d-b90d-d6ca34da44d5",
+                "messageStatus": "pending_enrichment",
+                "timestamps": {"created": "2024-10-18T15:12:44.986Z"},
+                "routingPlan": {
+                    "id": test_routing_config_id,
+                    "version": "oCvakVm0FA_z3Z1H6C5ekHGffqYaqVCs",
+                },
+            },
+            "links": {
+                "self": "https://int.api.service.nhs.uk/comms/v1/messages/2ncFGwT2zNEk9KFFjEivGlFPZMZ"
+            },
+        }
     }
 
 
