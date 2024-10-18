@@ -244,7 +244,7 @@ class TestBCSSCommsManager:
     # Test to get message status with missing message id, LIKELY NEEDS TO BE HANDLED BY
     # BCSSCOMMSMANAGER BEFORE REACHING FURTHER
     def test_get_message_status_missing_id(
-        self, mocker, bcss_comms_manager, notify_get_message_status_response
+        self, mocker, bcss_comms_manager, notify_403_forbidden_response
     ):
 
         mocker.patch.object(
@@ -256,7 +256,7 @@ class TestBCSSCommsManager:
         mocker.patch.object(
             bcss_comms_manager.nhs_notify,
             "get_message_status",
-            return_value=notify_get_message_status_response,
+            return_value=notify_403_forbidden_response,
         )
 
         response = bcss_comms_manager.get_message_status("")
