@@ -20,7 +20,7 @@ def send_pre_invitation():
 
     recipients = request_data.get("data")
 
-    response = bcss_comms_manager.send_pre_inviation(
+    response = bcss_comms_manager.send_pre_invitation(
         os.getenv("ROUTING_PLAN_ID"), recipients
     )
 
