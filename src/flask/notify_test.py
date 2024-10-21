@@ -1,10 +1,9 @@
+from time import time
 from dotenv import dotenv_values
 from flask import Flask, render_template, request, url_for, redirect, jsonify
 
 import os
-from .services.BCSSCommsManager import BCSSCommsManager
-
-### You will need to set up local env variables
+from services.BCSSCommsManager import BCSSCommsManager
 
 config = dotenv_values(".env")
 app = Flask(__name__)
@@ -21,7 +20,7 @@ def send_pre_invitation():
 
     recipients = request_data.get("data")
 
-    response = bcss_comms_manager.send_pre_inviation(
+    response = bcss_comms_manager.send_pre_invitation(
         os.getenv("ROUTING_PLAN_ID"), recipients
     )
 
@@ -30,7 +29,6 @@ def send_pre_invitation():
 
 @app.route("/message-status/<message_id>", methods=["GET"])
 def get_message_status(message_id: str):
-
     response = bcss_comms_manager.get_message_status(message_id)
 
     return jsonify(response), 200
@@ -44,21 +42,9 @@ def get_nhs_app_details(ods_code: str, page_number: int):
 
 @app.route("/")
 def main():
-    if request.method == "POST":
-        message_id = request.form.get("messageID")
-        return redirect(url_for("get_message_status", messageID=message_id))
-    return render_template(
-        "index.html",
-    )
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
     app.run(debug=True)
     main()
-
-### TO DO:
-# Decouple JWT Gen and Authentication from API calls, own files probably (Uzairs refactoring a good start)
-# Clean up duplicate code, move Notify headers etc. into own file
-# Add between pages at least for POST requests to paste in message bodies rather than hard coded
-# Take any request payload content into own folder (examples?)
-# Can probably put endpoint strings in variables too

@@ -13,7 +13,6 @@ MarkupSafe==3.0.1
 pycparser==2.22
 PyJWT==2.9.0
 pymongo==4.10.1
-pytest-mock==3.14.0
 python-dotenv==1.0.1
 requests==2.32.3
 urllib3==2.2.3
