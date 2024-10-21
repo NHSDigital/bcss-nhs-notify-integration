@@ -85,6 +85,19 @@ The following software packages, or their equivalents, are expected to be instal
 - [Python](https://www.python.org/) required to run Git hooks,
 - [`jq`](https://jqlang.github.io/jq/) a lightweight and flexible command-line JSON processor.
 
+### Encryption / Decryption of Private Keys
+[Git-Crypt] (https://github.com/AGWA/git-crypt) has been used to encrypt the private key in this repository, you will need to request a the symmetric secret key to decrypt the private key.
+When given the key, use the following command to unlock the files:
+```shell
+git-crypt unlock /path/to/key
+```
+To check the status of encrypted/non encrypted files, use the following command:
+
+```shell
+git-crypt status
+```
+
+
 ### Configuration
 
 Installation and configuration of the toolchain dependencies
