@@ -25,7 +25,8 @@ class NHSNotify:
         response: dict = self.api_client.make_request(
             method="POST", endpoint="/v1/messages", json=requestBody, headers=headers
         )
-        return response.json()
+
+        return response
 
     def send_batch_message(
         self, access_token: str, routing_config_id: str, recipients: list[dict]
@@ -49,7 +50,8 @@ class NHSNotify:
             json=requestBody,
             headers=headers,
         )
-        return response.json()
+
+        return response
 
     def get_message_status(self, access_token: str, message_id: str) -> dict:
         headers = {
@@ -63,7 +65,7 @@ class NHSNotify:
             method="GET", endpoint=f"/v1/messages/{message_id}", headers=headers
         )
 
-        return response.json()
+        return response
 
     def get_NHS_account_details(
         self, access_token: str, ods_code: str, page_number: str
@@ -84,4 +86,4 @@ class NHSNotify:
             params=params,
         )
 
-        return response.json()
+        return response

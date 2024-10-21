@@ -1,4 +1,5 @@
 class TestBCSSCommsManager:
+    # Test init for BCSSCommsManager works as intended
     def test_initialization(
         self,
         bcss_comms_manager,
@@ -17,13 +18,14 @@ class TestBCSSCommsManager:
         bcss_comms_manager,
         test_recipient,
         test_routing_config_id,
+        test_access_token,
         single_message_request_mock_response,
     ):
 
         mocker.patch.object(
             bcss_comms_manager.auth_manager,
             "get_access_token",
-            return_value="test_access_token",
+            return_value=test_access_token,
         )
 
         mocker.patch.object(
@@ -38,42 +40,7 @@ class TestBCSSCommsManager:
             test_routing_config_id, [test_recipient]
         )
 
-        assert type(response) == dict
-        assert response["data"]["type"] == "Message"
-        assert (
-            response["data"]["attributes"]["routingPlan"]["id"]
-            == test_routing_config_id
-        )
-
-    # TEMPORARY MISSING ROUTING CONFIG ID TEST, ADD HANDLING FOR MISSING ROUTING CONFIG ID AND RECIPIENTS
-    # TO OUR COMMS MANAGER
-    # Test to send pre-invitation to single recipient with missing routing config id
-    def test_send_pre_invitation_single_missing_routing_config(
-        self,
-        mocker,
-        bcss_comms_manager,
-        test_recipient,
-        notify_incorrect_routing_config_request_mock_response,
-    ):
-
-        mocker.patch.object(
-            bcss_comms_manager.auth_manager,
-            "get_access_token",
-            return_value="test_access_token",
-        )
-
-        mocker.patch.object(
-            bcss_comms_manager.nhs_notify,
-            "send_single_message",
-            return_value=notify_incorrect_routing_config_request_mock_response,
-        )
-
-        mocker.patch.object(bcss_comms_manager.data_access, "create_data")
-
-        response = bcss_comms_manager.send_pre_invitation("", [test_recipient])
-
-        assert response["errors"][0]["status"] == "400"
-        assert response["errors"][0]["code"] == "CM_INVALID_VALUE"
+        assert response == single_message_request_mock_response
 
     # Test to send pre-invitation to batch with correct data inputted
     def test_send_pre_invitation_batch(
@@ -82,13 +49,14 @@ class TestBCSSCommsManager:
         bcss_comms_manager,
         test_recipient_batch,
         test_routing_config_id,
+        test_access_token,
         batch_message_request_mock_response,
     ):
 
         mocker.patch.object(
             bcss_comms_manager.auth_manager,
             "get_access_token",
-            return_value="test_access_token",
+            return_value=test_access_token,
         )
 
         mocker.patch.object(
@@ -103,12 +71,37 @@ class TestBCSSCommsManager:
             test_routing_config_id, test_recipient_batch
         )
 
-        assert type(response) == dict
-        assert response["data"]["type"] == "MessageBatch"
-        assert (
-            response["data"]["attributes"]["routingPlan"]["id"]
-            == test_routing_config_id
+        assert response == batch_message_request_mock_response
+
+    # TEMPORARY MISSING ROUTING CONFIG ID TEST, ADD HANDLING FOR MISSING ROUTING CONFIG ID AND RECIPIENTS
+    # TO OUR COMMS MANAGER
+    # Test to send pre-invitation to single recipient with missing routing config id
+    def test_send_pre_invitation_single_missing_routing_config(
+        self,
+        mocker,
+        bcss_comms_manager,
+        test_recipient,
+        test_access_token,
+        notify_400_incorrect_routing_config_request_mock_response,
+    ):
+
+        mocker.patch.object(
+            bcss_comms_manager.auth_manager,
+            "get_access_token",
+            return_value=test_access_token,
         )
+
+        mocker.patch.object(
+            bcss_comms_manager.nhs_notify,
+            "send_single_message",
+            return_value=notify_400_incorrect_routing_config_request_mock_response,
+        )
+
+        mocker.patch.object(bcss_comms_manager.data_access, "create_data")
+
+        response = bcss_comms_manager.send_pre_invitation("", [test_recipient])
+
+        assert response == notify_400_incorrect_routing_config_request_mock_response
 
     # Test to send pre-invitation to batch with missing routing config id
     def test_send_pre_invitation_batch_missing_routing_config(
@@ -116,31 +109,27 @@ class TestBCSSCommsManager:
         mocker,
         bcss_comms_manager,
         test_recipient_batch,
-        notify_incorrect_routing_config_request_mock_response,
+        test_access_token,
+        notify_400_incorrect_routing_config_request_mock_response,
     ):
 
         mocker.patch.object(
             bcss_comms_manager.auth_manager,
             "get_access_token",
-            return_value="test_access_token",
+            return_value=test_access_token,
         )
 
         mocker.patch.object(
             bcss_comms_manager.nhs_notify,
             "send_batch_message",
-            return_value=notify_incorrect_routing_config_request_mock_response,
+            return_value=notify_400_incorrect_routing_config_request_mock_response,
         )
 
         mocker.patch.object(bcss_comms_manager.data_access, "create_data")
 
         response = bcss_comms_manager.send_pre_invitation("", test_recipient_batch)
 
-        assert response["errors"][0]["status"] == "400"
-        assert response["errors"][0]["code"] == "CM_INVALID_VALUE"
-        assert (
-            response["errors"][0]["source"]["pointer"]
-            == "/data/attributes/routingPlanId"
-        )
+        assert response == notify_400_incorrect_routing_config_request_mock_response
 
     # Test to send pre-invitation to single recipient with missing NHS number as ""
     def test_send_pre_invitation_missing_recipient_nhs_number(
@@ -149,20 +138,21 @@ class TestBCSSCommsManager:
         bcss_comms_manager,
         test_recipient_missing_nhs_number,
         test_routing_config_id,
-        notify_missing_nhs_number_mock_response,
+        test_access_token,
+        notify_400_missing_nhs_number_mock_response,
     ):
 
         mocker.patch.object(
             bcss_comms_manager.auth_manager,
             "get_access_token",
-            return_value="test_access_token",
+            return_value=test_access_token,
         )
 
         # Currently batch but realistically should throw error as soon as it realises no recipient number
         mocker.patch.object(
             bcss_comms_manager.nhs_notify,
             "send_single_message",
-            return_value=notify_missing_nhs_number_mock_response,
+            return_value=notify_400_missing_nhs_number_mock_response,
         )
 
         mocker.patch.object(bcss_comms_manager.data_access, "create_data")
@@ -171,12 +161,7 @@ class TestBCSSCommsManager:
             test_routing_config_id, [test_recipient_missing_nhs_number]
         )
 
-        assert response["errors"][0]["status"] == "400"
-        assert response["errors"][0]["code"] == "CM_INVALID_NHS_NUMBER"
-        assert (
-            response["errors"][0]["source"]["pointer"]
-            == "/data/attributes/recipient/nhsNumber"
-        )
+        assert response == notify_400_missing_nhs_number_mock_response
 
     # Test to send pre-invitation to single recipient with missing recipient DOB as ""
     def test_send_pre_invitation_missing_recipient_dob(
@@ -185,20 +170,21 @@ class TestBCSSCommsManager:
         bcss_comms_manager,
         test_recipient_missing_dob,
         test_routing_config_id,
-        notify_missing_dob_mock_response,
+        test_access_token,
+        notify_400_missing_dob_mock_response,
     ):
 
         mocker.patch.object(
             bcss_comms_manager.auth_manager,
             "get_access_token",
-            return_value="test_access_token",
+            return_value=test_access_token,
         )
 
         # Currently batch but realistically should throw error as soon as it realises no recipient number
         mocker.patch.object(
             bcss_comms_manager.nhs_notify,
             "send_single_message",
-            return_value=notify_missing_dob_mock_response,
+            return_value=notify_400_missing_dob_mock_response,
         )
 
         mocker.patch.object(bcss_comms_manager.data_access, "create_data")
@@ -207,25 +193,21 @@ class TestBCSSCommsManager:
             test_routing_config_id, [test_recipient_missing_dob]
         )
 
-        assert response["errors"][0]["status"] == "400"
-        assert response["errors"][0]["code"] == "CM_INVALID_VALUE"
-        assert (
-            response["errors"][0]["source"]["pointer"]
-            == "/data/attributes/recipient/dateOfBirth"
-        )
+        assert response == notify_400_missing_dob_mock_response
 
     def test_get_message_status(
         self,
         mocker,
         bcss_comms_manager,
         test_message_id,
+        test_access_token,
         notify_get_message_status_response,
     ):
 
         mocker.patch.object(
             bcss_comms_manager.auth_manager,
             "get_access_token",
-            return_value="test_access_token",
+            return_value=test_access_token,
         )
 
         mocker.patch.object(
@@ -236,21 +218,22 @@ class TestBCSSCommsManager:
 
         response = bcss_comms_manager.get_message_status(test_message_id)
 
-        assert type(response) == dict
-        assert response["data"]["type"] == "Message"
-        assert response["data"]["id"] == test_message_id
-        assert response["data"]["attributes"]["messageStatus"] == "pending_enrichment"
+        assert response == notify_get_message_status_response
 
     # Test to get message status with missing message id, LIKELY NEEDS TO BE HANDLED BY
     # BCSSCOMMSMANAGER BEFORE REACHING FURTHER
     def test_get_message_status_missing_id(
-        self, mocker, bcss_comms_manager, notify_403_forbidden_response
+        self,
+        mocker,
+        bcss_comms_manager,
+        notify_403_forbidden_response,
+        test_access_token,
     ):
 
         mocker.patch.object(
             bcss_comms_manager.auth_manager,
             "get_access_token",
-            return_value="test_access_token",
+            return_value=test_access_token,
         )
 
         mocker.patch.object(
@@ -261,15 +244,53 @@ class TestBCSSCommsManager:
 
         response = bcss_comms_manager.get_message_status("")
 
-        assert response["errors"][0]["status"] == "403"
-        assert response["errors"][0]["code"] == "CM_FORBIDDEN"
+        assert response == notify_403_forbidden_response
 
-    def test_get_nhs_app_account_details(self):
-        # Mock the auth manager for an access token
-        # Mock the notify and data access
-        pass
+    def test_get_nhs_app_account_details(
+        self,
+        mocker,
+        bcss_comms_manager,
+        test_access_token,
+        notify_get_nhs_app_account_details_mock_response,
+        test_ODS_code,
+    ):
 
-    def test_get_nhs_app_account_details_missing_ods_code(self):
-        # Mock the auth manager for an access token
-        # Mock the notify and data access
-        pass
+        mocker.patch.object(
+            bcss_comms_manager.auth_manager,
+            "get_access_token",
+            return_value=test_access_token,
+        )
+
+        mocker.patch.object(
+            bcss_comms_manager.nhs_notify,
+            "get_NHS_account_details",
+            return_value=notify_get_nhs_app_account_details_mock_response,
+        )
+
+        response = bcss_comms_manager.get_nhs_app_account_details(test_ODS_code, "1")
+
+        assert response == notify_get_nhs_app_account_details_mock_response
+
+    def test_get_nhs_app_account_details_missing_ods_code(
+        self,
+        mocker,
+        bcss_comms_manager,
+        test_access_token,
+        notify_400_missing_ods_code_response,
+    ):
+
+        mocker.patch.object(
+            bcss_comms_manager.auth_manager,
+            "get_access_token",
+            return_value=test_access_token,
+        )
+
+        mocker.patch.object(
+            bcss_comms_manager.nhs_notify,
+            "get_NHS_account_details",
+            return_value=notify_400_missing_ods_code_response,
+        )
+
+        response = bcss_comms_manager.get_nhs_app_account_details("", "1")
+
+        assert response == notify_400_missing_ods_code_response

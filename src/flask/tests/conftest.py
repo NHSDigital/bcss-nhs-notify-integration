@@ -11,6 +11,18 @@ from services.data_access import DataAccess
 
 config = dotenv_values("../.env")
 
+## FIXTURE CATEGORIES
+
+#### LOCAL ENV FIXTURES
+#### CLASS FIXTURES
+#### API FIXTURES
+#### MESSAGE FIXTURES
+#### AUTH FIXTURES
+#### UTIL MOCK RESPONSES
+#### SUCCESSFUL API CALL MOCK RESPONSES
+#### ERROR RESPONSES FROM NOTIFY
+
+
 #### LOCAL ENV FIXTURES ####
 
 
@@ -74,7 +86,28 @@ def test_message_id() -> str:
     return "test_message_id"
 
 
+@pytest.fixture()
+def test_access_token() -> str:
+    return "test_access_token"
+
+
+@pytest.fixture()
+def test_ODS_code() -> str:
+    return "T00001"
+
+
+@pytest.fixture()
+def test_jwt() -> str:
+    return "test_jwt"
+
+
 #### CLASS FIXTURES ####
+
+
+@pytest.fixture()
+def auth_manager():
+    temp_auth_manager = AuthManager()
+    yield temp_auth_manager
 
 
 @pytest.fixture()
@@ -88,15 +121,12 @@ def base_api_client_notify(nhs_notify_base_url):
 
 
 @pytest.fixture()
-def nhs_notify(nhs_notify_base_url):
-    temp_nhs_notify = NHSNotify(nhs_notify_base_url)
-    yield temp_nhs_notify
-
-
-@pytest.fixture()
-def auth_manager():
-    temp_auth_manager = AuthManager()
-    yield temp_auth_manager
+def bcss_comms_manager(nhs_notify, auth_manager, data_access):
+    temp_bcss_comms_manager = BCSSCommsManager()
+    temp_bcss_comms_manager.nhs_notify = nhs_notify
+    temp_bcss_comms_manager.auth_manager = auth_manager
+    temp_bcss_comms_manager.data_access = data_access
+    yield temp_bcss_comms_manager
 
 
 @pytest.fixture()
@@ -114,12 +144,9 @@ def generic_base_api_client(generic_api_url):
 
 
 @pytest.fixture()
-def bcss_comms_manager(nhs_notify, auth_manager, data_access):
-    temp_bcss_comms_manager = BCSSCommsManager()
-    temp_bcss_comms_manager.nhs_notify = nhs_notify
-    temp_bcss_comms_manager.auth_manager = auth_manager
-    temp_bcss_comms_manager.data_access = data_access
-    yield temp_bcss_comms_manager
+def nhs_notify(nhs_notify_base_url):
+    temp_nhs_notify = NHSNotify(nhs_notify_base_url)
+    yield temp_nhs_notify
 
 
 #### API FIXTURES ####
@@ -216,6 +243,25 @@ def test_jwt_params(kid, api_key, token_url) -> dict:
     }
 
 
+@pytest.fixture()
+def test_get_access_token_mock_response(test_access_token) -> json:
+    return {
+        "access_token": test_access_token,
+        "expires_in": "599",
+        "token_type": "Bearer",
+        "issued_at": "1729513788811",
+    }
+
+
+@pytest.fixture()
+def get_access_token_failed_jwt_response() -> json:
+    return {
+        "error": "invalid_request",
+        "error_description": "Malformed JWT in client_assertion",
+        "message_id": "rrt-4354921348896248477-c-geu2-2703741-1330684-1",
+    }
+
+
 #### UTIL MOCK RESPONSES ####
 
 
@@ -259,7 +305,7 @@ def generate_notify_batch_mock_response(test_routing_config_id) -> json:
     }
 
 
-#### API CALL MOCK RESPONSES ####
+#### SUCCESSFUL API CALL MOCK RESPONSES ####
 
 
 @pytest.fixture()
@@ -302,84 +348,6 @@ def batch_message_request_mock_response(test_routing_config_id) -> json:
 
 
 @pytest.fixture()
-def notify_missing_auth_request_mock_response() -> json:
-    return {
-        "errors": [
-            {
-                "id": "rrt-1931948104716186917-c-geu2-10664-3111479-3.0",
-                "code": "CM_DENIED",
-                "links": {
-                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
-                },
-                "status": "401",
-                "title": "Access denied",
-                "detail": "Access token missing, invalid or expired, or calling application not configured for this operation.",
-                "source": {"header": "Authorization"},
-            }
-        ]
-    }
-
-
-@pytest.fixture()
-def notify_missing_nhs_number_mock_response() -> json:
-    return {
-        "errors": [
-            {
-                "id": "rrt-2709357079573522931-b-geu2-1562214-7061178-2.0",
-                "code": "CM_INVALID_NHS_NUMBER",
-                "links": {
-                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify",
-                    "nhsNumbers": "https://www.datadictionary.nhs.uk/attributes/nhs_number.html",
-                },
-                "status": "400",
-                "title": "Invalid nhs number",
-                "detail": "The value provided in this nhsNumber field is not a valid NHS number.",
-                "source": {"pointer": "/data/attributes/recipient/nhsNumber"},
-            }
-        ]
-    }
-
-
-@pytest.fixture()
-def notify_missing_dob_mock_response() -> json:
-    return {
-        "errors": [
-            {
-                "id": "rrt-48133796090514339-a-geu2-2913303-6913317-2.1",
-                "code": "CM_INVALID_VALUE",
-                "links": {
-                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
-                },
-                "status": "400",
-                "title": "Invalid value",
-                "detail": "The property at the specified location does not allow this value.",
-                "source": {"pointer": "/data/attributes/recipient/dateOfBirth"},
-            }
-        ]
-    }
-
-
-# What is currently returned if making a get message status call with no ID (Postman)
-@pytest.fixture()
-def notify_403_forbidden_response() -> json:
-    return {
-        "errors": [
-            {
-                "id": "rrt-1299718902873520380-b-geu2-375102-2184555-2.0",
-                "code": "CM_FORBIDDEN",
-                "links": {
-                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
-                },
-                "status": "403",
-                "title": "Forbidden",
-                "detail": "Client not recognised or not yet onboarded.",
-                "source": {"header": "Authorization"},
-            }
-        ]
-    }
-
-
-@pytest.fixture()
 def notify_get_message_status_response(test_message_id, test_routing_config_id) -> json:
     return {
         "data": {
@@ -401,44 +369,24 @@ def notify_get_message_status_response(test_message_id, test_routing_config_id) 
     }
 
 
-#### Not possible for our code to do this ####
-# @pytest.fixture()
-# def notify_missing_routing_config_request_mock_response() -> json:
-#     return {
-#         "errors": [
-#             {
-#                 "id": "rrt-1511539508728642326-c-geu2-3781149-506241-6.0",
-#                 "code": "CM_MISSING_VALUE",
-#                 "links": {
-#                     "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
-#                 },
-#                 "status": "400",
-#                 "title": "Missing property",
-#                 "detail": "The property at the specified location is required, but was not present in the request.",
-#                 "source": {
-#                     "pointer": "/data/attributes/routingPlanId"
-#                 }
-#             }
-#         ]
-# }
-
-
 @pytest.fixture()
-def notify_incorrect_routing_config_request_mock_response() -> json:
+def notify_get_nhs_app_account_details_mock_response() -> json:
     return {
-        "errors": [
-            {
-                "id": "rrt-347680715282487770-c-geu2-1809628-6172494-2.0",
-                "code": "CM_INVALID_VALUE",
-                "links": {
-                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
-                },
-                "status": "400",
-                "title": "Invalid value",
-                "detail": "The property at the specified location does not allow this value.",
-                "source": {"pointer": "/data/attributes/routingPlanId"},
-            }
-        ]
+        "data": {
+            "type": "NhsAppAccounts",
+            "id": "T00001",
+            "attributes": {
+                "accounts": [
+                    {"nhsNumber": "9303411455", "notificationsEnabled": True},
+                    {"nhsNumber": "9684099843", "notificationsEnabled": False},
+                ]
+            },
+        },
+        "links": {
+            "last": "https://int.api.service.nhs.uk/comms/channels/nhsapp/accounts?ods-organisation-code=T00001&page=5",
+            "self": "https://int.api.service.nhs.uk/comms/channels/nhsapp/accounts?ods-organisation-code=T00001&page=2",
+            "next": "https://int.api.service.nhs.uk/comms/channels/nhsapp/accounts?ods-organisation-code=T00001&page=3",
+        },
     }
 
 
@@ -497,4 +445,122 @@ def test_generic_api_response() -> json:
             "url": "https://reqres.in/#support-heading",
             "text": "To keep ReqRes free, contributions towards server costs are appreciated!",
         },
+    }
+
+
+#### ERROR RESPONSES FROM NOTIFY ####
+
+
+@pytest.fixture()
+def notify_401_missing_auth_request_mock_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-1931948104716186917-c-geu2-10664-3111479-3.0",
+                "code": "CM_DENIED",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
+                },
+                "status": "401",
+                "title": "Access denied",
+                "detail": "Access token missing, invalid or expired, or calling application not configured for this operation.",
+                "source": {"header": "Authorization"},
+            }
+        ]
+    }
+
+
+@pytest.fixture()
+def notify_400_missing_nhs_number_mock_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-2709357079573522931-b-geu2-1562214-7061178-2.0",
+                "code": "CM_INVALID_NHS_NUMBER",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify",
+                    "nhsNumbers": "https://www.datadictionary.nhs.uk/attributes/nhs_number.html",
+                },
+                "status": "400",
+                "title": "Invalid nhs number",
+                "detail": "The value provided in this nhsNumber field is not a valid NHS number.",
+                "source": {"pointer": "/data/attributes/recipient/nhsNumber"},
+            }
+        ]
+    }
+
+
+@pytest.fixture()
+def notify_400_incorrect_routing_config_request_mock_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-347680715282487770-c-geu2-1809628-6172494-2.0",
+                "code": "CM_INVALID_VALUE",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
+                },
+                "status": "400",
+                "title": "Invalid value",
+                "detail": "The property at the specified location does not allow this value.",
+                "source": {"pointer": "/data/attributes/routingPlanId"},
+            }
+        ]
+    }
+
+
+@pytest.fixture()
+def notify_400_missing_dob_mock_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-48133796090514339-a-geu2-2913303-6913317-2.1",
+                "code": "CM_INVALID_VALUE",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
+                },
+                "status": "400",
+                "title": "Invalid value",
+                "detail": "The property at the specified location does not allow this value.",
+                "source": {"pointer": "/data/attributes/recipient/dateOfBirth"},
+            }
+        ]
+    }
+
+
+# What is currently returned if making a get message status call with no ID (Postman)
+@pytest.fixture()
+def notify_403_forbidden_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-1299718902873520380-b-geu2-375102-2184555-2.0",
+                "code": "CM_FORBIDDEN",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
+                },
+                "status": "403",
+                "title": "Forbidden",
+                "detail": "Client not recognised or not yet onboarded.",
+                "source": {"header": "Authorization"},
+            }
+        ]
+    }
+
+
+@pytest.fixture()
+def notify_400_missing_ods_code_response() -> json:
+    return {
+        "errors": [
+            {
+                "id": "rrt-4354921348896248477-c-geu2-2703740-1217381-2.0",
+                "code": "CM_INVALID_REQUEST",
+                "links": {
+                    "about": "https://digital.nhs.uk/developer/api-catalogue/nhs-notify"
+                },
+                "status": "400",
+                "title": "Invalid Request",
+                "detail": "Missing ODS Code",
+            }
+        ]
     }

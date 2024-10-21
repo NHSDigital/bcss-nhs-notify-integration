@@ -29,8 +29,7 @@ class AuthManager:
         response = self.api_client.make_request(
             "POST", "", data=body, headers=headers, params=None
         )
-        responseJson = response.json()
-        access_token = responseJson["access_token"]
+        access_token = response["access_token"]
 
         return access_token
 
