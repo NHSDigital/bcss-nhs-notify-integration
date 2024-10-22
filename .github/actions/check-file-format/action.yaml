@@ -8,3 +8,7 @@ runs:
       run: |
         export BRANCH_NAME=origin/${{ github.event.repository.default_branch }}
         check=branch ./scripts/githooks/check-file-format.sh
+on:
+  push:
+    paths-ignore:
+      - '**.pem'
