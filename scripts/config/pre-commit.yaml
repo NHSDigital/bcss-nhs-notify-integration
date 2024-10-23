@@ -13,8 +13,19 @@ repos:
       - id: forbid-new-submodules
       - id: mixed-line-ending
       - id: pretty-format-json
-        args: ['--autofix']
+        args: ["--autofix"]
     # -   id: ...
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args: [
+            "-rn", # Only display messages
+            "-sn", # Don't display the score
+          ]
   - repo: https://github.com/psf/black
     rev: 22.3.0
     hooks:
