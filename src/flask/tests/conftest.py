@@ -1,15 +1,13 @@
 import pytest
 import json
 import uuid
-from dotenv import dotenv_values
+import os
 from time import time
 from services.base_api_client import BaseAPIClient
 from services.nhs_notify import NHSNotify
 from services.bcss_comms_manager import BCSSCommsManager
 from services.auth_manager import AuthManager
 from services.data_access import DataAccess
-
-config = dotenv_values("../.env")
 
 ## FIXTURE CATEGORIES
 
@@ -28,47 +26,47 @@ config = dotenv_values("../.env")
 
 @pytest.fixture()
 def routing_config_id() -> str:
-    return config.get("ROUTING_PLAN_ID")
+    return os.getenv("ROUTING_PLAN_ID")
 
 
 @pytest.fixture()
 def nhs_notify_base_url():
-    yield config.get("NHS_NOTIFY_BASE_URL")
+    yield os.getenv("NHS_NOTIFY_BASE_URL")
 
 
 @pytest.fixture()
 def api_key() -> str:
-    return config.get("API_KEY")
+    return os.getenv("API_KEY")
 
 
 @pytest.fixture()
 def token_url() -> str:
-    return config.get("TOKEN_URL")
+    return os.getenv("TOKEN_URL")
 
 
 @pytest.fixture()
 def kid() -> str:
-    return config.get("KID")
+    return os.getenv("KID")
 
 
 @pytest.fixture()
 def private_key_path() -> str:
-    return config.get("PRIVATE_KEY_PATH")
+    return os.getenv("PRIVATE_KEY_PATH")
 
 
 @pytest.fixture()
 def document_db_uri() -> str:
-    return config.get("DOCUMENT_DB_URI")
+    return os.getenv("DOCUMENT_DB_URI")
 
 
 @pytest.fixture()
 def document_db_name() -> str:
-    return config.get("DOCUMENT_DB_NAME")
+    return os.getenv("DOCUMENT_DB_NAME")
 
 
 @pytest.fixture()
 def document_db_collection() -> str:
-    return config.get("DOCUMENT_DB_COLLECTION")
+    return os.getenv("DOCUMENT_DB_COLLECTION")
 
 
 @pytest.fixture()

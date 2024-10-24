@@ -1,18 +1,15 @@
 import json
 from time import time
 import uuid
-from dotenv import dotenv_values
 import os
 
 from .base_api_client import BaseAPIClient
 from .util import Util
 
-config = dotenv_values("../.env")
-
 
 class AuthManager:
     def __init__(self) -> None:
-        self.api_client: BaseAPIClient = BaseAPIClient(config.get("TOKEN_URL"))
+        self.api_client: BaseAPIClient = BaseAPIClient(os.getenv("TOKEN_URL"))
 
     def get_access_token(self) -> str:
 
@@ -37,17 +34,17 @@ class AuthManager:
         algorithm: str = "RS512"
 
         expiry_minutes: int = 5
-        headers: dict = {"alg": algorithm, "typ": "JWT", "kid": config.get("KID")}
+        headers: dict = {"alg": algorithm, "typ": "JWT", "kid": os.getenv("KID")}
 
         payload: dict = {
-            "sub": config.get("API_KEY"),
-            "iss": config.get("API_KEY"),
+            "sub": os.getenv("API_KEY"),
+            "iss": os.getenv("API_KEY"),
             "jti": str(uuid.uuid4()),
-            "aud": config.get("TOKEN_URL"),
+            "aud": os.getenv("TOKEN_URL"),
             "exp": int(time()) + 300,  # 5mins in the future
         }
 
-        private_key = Util.get_private_key(config.get("PRIVATE_KEY_PATH"))
+        private_key = Util.get_private_key(os.getenv("PRIVATE_KEY_PATH"))
 
         return Util.generate_jwt(
             algorithm, private_key, headers, payload, expiry_minutes=5
