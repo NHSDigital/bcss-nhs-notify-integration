@@ -205,10 +205,7 @@ def test_recipient_missing_dob() -> dict:
 
 @pytest.fixture()
 def test_recipient_batch() -> dict:
-    return [
-        {"NHS#": "9990548609", "dob": "1932-01-06"},
-        {"NHS#": "9800100369", "dob": "1983-12-03"},
-    ]
+    return ["9990548609", "9800100369"]
 
 
 @pytest.fixture()

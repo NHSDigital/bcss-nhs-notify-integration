@@ -8,14 +8,13 @@ class TestUtil:
     # Assert returned message contains test recipient data passed in
     def test_generate_message(self, test_recipient: dict):
         # Assert returned message to example message
-        message_base = Util.generate_message(test_recipient)
+        message_base = Util.generate_message(test_recipient["NHS#"])
         assert message_base["recipient"]["nhsNumber"] == test_recipient["NHS#"]
-        assert message_base["recipient"]["dateOfBirth"] == test_recipient["dob"]
 
     # Assert returned message is constructed as correct type and contains test recipient data passed in
     def test_generate_single_message_request_body(self, test_recipient):
         message_request_single = Util.generate_single_message_request_body(
-            test_recipient, "test_routing_config_id"
+            test_recipient["NHS#"], "test_routing_config_id"
         )
         assert message_request_single["data"]["type"] == "Message"
         assert (
@@ -25,10 +24,6 @@ class TestUtil:
         assert (
             message_request_single["data"]["attributes"]["recipient"]["nhsNumber"]
             == test_recipient["NHS#"]
-        )
-        assert (
-            message_request_single["data"]["attributes"]["recipient"]["dateOfBirth"]
-            == test_recipient["dob"]
         )
 
     # Assert returned message batch is constructed as correct type with test recipient data passed in
@@ -52,20 +47,12 @@ class TestUtil:
         request_body_messages = message_request_batch["data"]["attributes"]["messages"]
         assert (
             request_body_messages[0]["recipient"]["nhsNumber"]
-            == test_recipient_batch[0]["NHS#"]
-        )
-        assert (
-            request_body_messages[0]["recipient"]["dateOfBirth"]
-            == test_recipient_batch[0]["dob"]
+            == test_recipient_batch[0]
         )
 
         assert (
             request_body_messages[1]["recipient"]["nhsNumber"]
-            == test_recipient_batch[1]["NHS#"]
-        )
-        assert (
-            request_body_messages[1]["recipient"]["dateOfBirth"]
-            == test_recipient_batch[1]["dob"]
+            == test_recipient_batch[1]
         )
 
     # Assert returned private key is read and assigned correctly
