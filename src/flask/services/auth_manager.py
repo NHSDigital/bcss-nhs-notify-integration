@@ -1,15 +1,13 @@
 import json
 from time import time
 import uuid
-from dotenv import dotenv_values
 import os
 
-from .BaseAPIClient import BaseAPIClient
-from .Util import Util
+from .base_api_client import BaseAPIClient
+from .util import Util
 
 
 class AuthManager:
-
     def __init__(self) -> None:
         self.api_client: BaseAPIClient = BaseAPIClient(os.getenv("TOKEN_URL"))
 
@@ -25,10 +23,10 @@ class AuthManager:
             "client_assertion": jwt,
         }
 
-        reponse = self.api_client.make_request(
+        response = self.api_client.make_request(
             "POST", "", data=body, headers=headers, params=None
         )
-        access_token = reponse["access_token"]
+        access_token = response["access_token"]
 
         return access_token
 
@@ -36,7 +34,6 @@ class AuthManager:
         algorithm: str = "RS512"
 
         expiry_minutes: int = 5
-
         headers: dict = {"alg": algorithm, "typ": "JWT", "kid": os.getenv("KID")}
 
         payload: dict = {

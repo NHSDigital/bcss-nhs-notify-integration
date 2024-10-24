@@ -16,3 +16,5 @@ __pycache__/
 */venv/
 
 .DS_Store
+jwtRS512.key
+git-crypt-key
