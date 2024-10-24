@@ -13,8 +13,6 @@ version.json
 # Please, add your custom content below!
 .env
 __pycache__/
-*.pem
-*.key
 */venv/
 
 .DS_Store
