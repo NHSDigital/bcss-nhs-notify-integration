@@ -37,7 +37,6 @@ class AuthManager:
         algorithm: str = "RS512"
 
         expiry_minutes: int = 5
-
         headers: dict = {"alg": algorithm, "typ": "JWT", "kid": config.get("KID")}
 
         payload: dict = {

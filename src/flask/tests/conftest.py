@@ -225,11 +225,11 @@ def test_notify_message_base() -> json:
 
 
 @pytest.fixture()
-def test_jwt_params(kid, api_key, token_url) -> dict:
+def test_jwt_params(api_key, token_url) -> dict:
     return {
         "algorithm": "RS512",
         "expiry_minutes": 5,
-        "headers": {"alg": "RS512", "typ": "JWT", "kid": kid},
+        "headers": {"alg": "RS512", "typ": "JWT", "kid": "test-kid"},
         "payload": {
             "sub": api_key,
             "iss": api_key,

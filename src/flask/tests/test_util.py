@@ -57,7 +57,7 @@ class TestUtil:
 
     # Assert returned private key is read and assigned correctly
     def test_get_private_key(self):
-        test_private_key = Util.get_private_key("test_private_key.key")
+        test_private_key = Util.get_private_key("test_private_key.txt")
         assert test_private_key == "test_private_key\n"
 
     # Test to generate JWT, assert it exists
