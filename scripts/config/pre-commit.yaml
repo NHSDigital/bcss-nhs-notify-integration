@@ -15,6 +15,15 @@ repos:
       - id: pretty-format-json
         args: ['--autofix']
     # -   id: ...
+  - repo: local
+    hooks:
+    - id: pytest
+      name: pytest
+      entry: pytest src/flask/tests
+      language: system
+      types: [python]
+      pass_filenames: false
+      always_run: true
   - repo: https://github.com/psf/black
     rev: 22.3.0
     hooks:

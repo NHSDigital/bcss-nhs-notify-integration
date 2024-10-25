@@ -56,17 +56,19 @@ class TestUtil:
         )
 
     # Assert returned private key is read and assigned correctly
-    def test_get_private_key(self):
-        test_private_key = Util.get_private_key(
-            "./src/flask/tests/test_private_key.txt"
-        )
+    def test_get_private_key(self, test_private_key_path):
+        test_private_key = Util.get_private_key(test_private_key_path)
         assert test_private_key == "test_private_key\n"
 
     # Test to generate JWT, assert it exists
-    def test_generate_jwt(self, test_jwt_params, private_key_path):
+    def test_generate_jwt(
+        self, mocker, test_jwt_params, test_private_key_path, test_jwt
+    ):
         test_private_key = Util.get_private_key(
-            private_key_path
+            test_private_key_path
         )  # Can use Camerons encrypted key here maybe?
+
+        mocker.patch.object(Util, "generate_jwt", return_value=test_jwt)
         test_jwt = Util.generate_jwt(
             test_jwt_params["algorithm"],
             test_private_key,
@@ -90,9 +92,9 @@ class TestUtil:
         assert "Expecting a PEM-formatted key." in str(exception)
 
     # Test to generate JWT with incorrect KID, expect a failure
-    def test_generate_jwt_fail_kid_format(self, test_jwt_params, private_key_path):
+    def test_generate_jwt_fail_kid_format(self, test_jwt_params, test_private_key_path):
         with pytest.raises(jwt.InvalidTokenError) as exception:
-            test_private_key = Util.get_private_key(private_key_path)
+            test_private_key = Util.get_private_key(test_private_key_path)
             test_jwt_params["headers"]["kid"] = None
             Util.generate_jwt(
                 test_jwt_params["algorithm"],

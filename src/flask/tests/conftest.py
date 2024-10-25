@@ -99,6 +99,16 @@ def test_jwt() -> str:
     return "test_jwt"
 
 
+@pytest.fixture()
+def test_private_key() -> str:
+    return "test_private_key"
+
+
+@pytest.fixture()
+def test_private_key_path() -> str:
+    return "./src/flask/tests/test_private_key.txt"
+
+
 #### CLASS FIXTURES ####
 
 
