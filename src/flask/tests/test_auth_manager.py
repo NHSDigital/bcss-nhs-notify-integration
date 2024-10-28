@@ -12,12 +12,7 @@ class TestAuthManager:
 
     # Test access token request, expect a 20X response with everything correct
     def test_get_access_token(
-        self,
-        mocker,
-        auth_manager,
-        test_get_access_token_mock_response,
-        test_jwt,
-        test_private_key,
+        self, mocker, auth_manager, test_get_access_token_mock_response, test_jwt
     ):
 
         mocker.patch.object(

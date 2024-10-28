@@ -1,7 +1,5 @@
-import json
 from time import time
 import uuid
-from dotenv import dotenv_values
 import os
 
 from .base_api_client import BaseAPIClient
