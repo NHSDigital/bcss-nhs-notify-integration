@@ -14,5 +14,5 @@ version.json
 .env
 __pycache__/
 */venv/
-
+git-crypt-key
 .DS_Store
