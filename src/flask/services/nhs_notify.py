@@ -1,11 +1,10 @@
-from .BaseAPIClient import BaseAPIClient
-from .Util import Util
+from .base_api_client import BaseAPIClient
+from .util import Util
 
 import uuid
 
 
 class NHSNotify:
-
     def __init__(self, base_url: str) -> None:
         self.api_client = BaseAPIClient(base_url)
 
@@ -66,7 +65,7 @@ class NHSNotify:
 
         return response
 
-    def get_NHS_acccount_details(
+    def get_NHS_account_details(
         self, access_token: str, ods_code: str, page_number: str
     ):
         headers = {

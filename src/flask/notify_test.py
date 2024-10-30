@@ -3,7 +3,7 @@ from dotenv import dotenv_values
 from flask import Flask, render_template, request, url_for, redirect, jsonify
 
 import os
-from services.BCSSCommsManager import BCSSCommsManager
+from services.bcss_comms_manager import BCSSCommsManager
 
 config = dotenv_values(".env")
 app = Flask(__name__)

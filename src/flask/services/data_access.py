@@ -1,5 +1,4 @@
-from .MongoDBHandler import MongoDBHandler
-from dotenv import dotenv_values
+from .mongo_db_handler import MongoDBHandler
 
 
 class DataAccess:
