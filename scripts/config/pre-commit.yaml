@@ -19,7 +19,7 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: pylint
+        entry: pylint src
         language: system
         types: [python]
         args: [
