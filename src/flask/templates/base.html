@@ -1,14 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
     {% block head %}{% endblock %}
-</head>
-<body>
-    <h1>NHS Notify Integration</h1>
-    <a href="/"> Home </a>
+  </head>
+  <body>
+    <h1>NHS Notify Integration Example Endpoints</h1>
     {% block body %}{% endblock %}
-</body>
+  </body>
+  <script>
+    const PRE_INVITATION_URL = "http://localhost:5001/send-pre-invitation"
+    const PRE_INVITATION_HEADERS = {
+      "Content-Type": "application/json",
+    }
+
+    const SINGLE_NHS_NUMBER_ARR = ["9733385808"] // <-- Must be of length 1, otherwise I will cause a batch message to be sent
+    const BATCH_NHS_NUMBER_ARR = ["9733385808", "9733385816", "9733385824"]
+
+    const SINGLE_NHS_NUMBER_REQ_BODY = {
+      data: SINGLE_NHS_NUMBER_ARR,
+    }
+    const BATCH_NHS_NUMBER_REQ_BODY = {
+      data: BATCH_NHS_NUMBER_ARR,
+    }
+
+    function sendBatchPreInvitationRequest() {
+      // Display the request body in JSON format before sending the request
+      document.getElementById(
+        "batchPreInvitationRequestBodyDisplay"
+      ).innerHTML = `
+              <h3>Request Body:</h3>
+              <pre>${JSON.stringify(BATCH_NHS_NUMBER_REQ_BODY, null, 2)}</pre>
+          `;
+
+      fetch(PRE_INVITATION_URL, {
+        method: "POST",
+        headers: PRE_INVITATION_HEADERS,
+        body: JSON.stringify(BATCH_NHS_NUMBER_REQ_BODY),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Display the response data in the HTML
+          document.getElementById(
+            "batchPreInvitationResponseDisplay"
+          ).innerHTML = `
+                  <h3>Response:</h3>
+                  <pre>${JSON.stringify(data, null, 2)}</pre>
+              `;
+        })
+        .catch((error) => {
+          // Display any error that occurs in the HTML
+          document.getElementById(
+            "batchPreInvitationResponseDisplay"
+          ).innerHTML = `
+                <h3>Error:</h3>
+                <pre>${error}</pre>
+            `;
+        });
+    }
+
+    function sendSinglePreInvitationRequest() {
+      // Hardcoded request body
+      const requestBody = {
+        data: SINGLE_NHS_NUMBER_ARR,
+      };
+
+      // Display the request body in JSON format before sending the request
+      document.getElementById(
+        "singlePreInvitationRequestBodyDisplay"
+      ).innerHTML = `
+              <h3>Request Body:</h3>
+              <pre>${JSON.stringify(SINGLE_NHS_NUMBER_REQ_BODY, null, 2)}</pre>
+          `;
+
+      fetch(PRE_INVITATION_URL, {
+        method: "POST",
+        headers: PRE_INVITATION_HEADERS,
+        body: JSON.stringify(SINGLE_NHS_NUMBER_REQ_BODY),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Display the response data in the HTML
+          document.getElementById(
+            "singlePreInvitationResponseDisplay"
+          ).innerHTML = `
+                  <h3>Response:</h3>
+                  <pre>${JSON.stringify(data, null, 2)}</pre>
+              `;
+        })
+        .catch((error) => {
+          // Display any error that occurs in the HTML
+          document.getElementById(
+            "singlePreInvitationResponseDisplay"
+          ).innerHTML = `
+                <h3>Error:</h3>
+                <pre>${error}</pre>
+            `;
+        });
+    }
+
+    function sendGetMessageStatusRequest() {
+      // Get the post ID from the input field
+      const messageId = document.getElementById("messageId").value;
+
+      // Construct the URL with the path parameter
+      const url = `http://localhost:5001/message-status/${messageId}`; // Public test API
+
+      fetch(url, {
+        method: "GET",
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Display the response data in the HTML
+          document.getElementById("getMessageStatusResponseDisplay").innerHTML = `
+                    <h3>Response:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+        })
+        .catch((error) => {
+          // Display any error that occurs in the HTML
+          document.getElementById("getMessageStatusResponseDisplay").innerHTML = `
+                    <h3>Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+        });
+    }
+  </script>
 </html>

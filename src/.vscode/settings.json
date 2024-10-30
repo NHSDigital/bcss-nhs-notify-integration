@@ -9,5 +9,15 @@
     "**/CVS": true,
     "**/Thumbs.db": true,
     "helloworld": true
-  }
+  },
+  "python.envFile": "./src/flask/.env",
+  "python.testing.pytestArgs": [
+    "-v",
+    "-s",
+    "--rootdir",
+    "flask/tests",
+    "flask"
+  ],
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false
 }
