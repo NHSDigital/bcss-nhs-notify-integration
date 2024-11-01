@@ -1,6 +1,6 @@
 import uuid
-import jwt
 from datetime import datetime, timezone, timedelta
+import jwt
 
 
 class Util:

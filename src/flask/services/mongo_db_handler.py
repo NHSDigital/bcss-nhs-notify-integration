@@ -13,7 +13,7 @@ class MongoDBHandler:
         result = collection.insert_one(data)
         return result.inserted_id
 
-    def read_document(self, collection_name, query={}):
+    def read_document(self, collection_name, query):
         # Find documents in the specified collection based on a query
         collection = self.db[collection_name]
         return list(collection.find(query))

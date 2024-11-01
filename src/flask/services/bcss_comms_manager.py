@@ -1,8 +1,8 @@
+import os
+
 from .nhs_notify import NHSNotify
 from .auth_manager import AuthManager
 from .data_access import DataAccess
-
-import os
 
 
 class BCSSCommsManager:
@@ -40,7 +40,7 @@ class BCSSCommsManager:
 
     def get_nhs_app_account_details(self, ods_code: str, page_number: str):
         access_token: str = self.auth_manager.get_access_token()
-        response = self.nhs_notify.get_NHS_account_details(
+        response = self.nhs_notify.get_nhs_account_details(
             access_token, ods_code, page_number
         )
         return response

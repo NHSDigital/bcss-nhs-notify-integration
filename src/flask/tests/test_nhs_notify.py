@@ -5,7 +5,6 @@ class TestNHSNotify:
     # Test init for BaseAPIClient works as intended
     def test_initialization(self, nhs_notify, nhs_notify_base_url):
         assert nhs_notify.api_client.base_url == nhs_notify_base_url
-        pass
 
     # Test to send a single message
     def test_send_single_message(
@@ -173,12 +172,12 @@ class TestNHSNotify:
         assert response == notify_403_forbidden_response
 
     # Test for successful get nhs account details request
-    def test_get_NHS_account_details(
+    def test_get_nhs_account_details(
         self,
         mocker,
         nhs_notify,
         notify_get_nhs_app_account_details_mock_response,
-        test_ODS_code,
+        test_ods_code,
         test_access_token,
     ):
 
@@ -188,14 +187,14 @@ class TestNHSNotify:
             return_value=notify_get_nhs_app_account_details_mock_response,
         )
 
-        response = nhs_notify.get_NHS_account_details(
-            test_access_token, test_ODS_code, "1"
+        response = nhs_notify.get_nhs_account_details(
+            test_access_token, test_ods_code, "1"
         )
 
         assert response == notify_get_nhs_app_account_details_mock_response
 
     # Test to fail for get nhs account details with missing ods code
-    def test_get_NHS_account_details_missing_ods_code(
+    def test_get_nhs_account_details_missing_ods_code(
         self,
         mocker,
         nhs_notify,
@@ -209,6 +208,6 @@ class TestNHSNotify:
             return_value=notify_400_missing_ods_code_response,
         )
 
-        response = nhs_notify.get_NHS_account_details(test_access_token, "", "1")
+        response = nhs_notify.get_nhs_account_details(test_access_token, "", "1")
 
         assert response == notify_400_missing_ods_code_response
