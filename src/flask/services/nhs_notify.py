@@ -1,7 +1,6 @@
+import uuid
 from .base_api_client import BaseAPIClient
 from .util import Util
-
-import uuid
 
 
 class NHSNotify:
@@ -18,12 +17,12 @@ class NHSNotify:
             "authorization": "Bearer " + access_token,
         }
 
-        requestBody: dict = Util.generate_single_message_request_body(
+        request_body: dict = Util.generate_single_message_request_body(
             recipient, routing_config_id
         )
 
         response: dict = self.api_client.make_request(
-            method="POST", endpoint="/v1/messages", json=requestBody, headers=headers
+            method="POST", endpoint="/v1/messages", json=request_body, headers=headers
         )
         return response
 
@@ -39,14 +38,14 @@ class NHSNotify:
 
         message_batch_reference: str = str(uuid.uuid4())
 
-        requestBody: dict = Util.generate_batch_message_request_body(
+        request_body: dict = Util.generate_batch_message_request_body(
             routing_config_id, message_batch_reference, recipients
         )
 
         response: dict = self.api_client.make_request(
             method="POST",
             endpoint="/v1/message-batches",
-            json=requestBody,
+            json=request_body,
             headers=headers,
         )
         return response
@@ -65,7 +64,7 @@ class NHSNotify:
 
         return response
 
-    def get_NHS_account_details(
+    def get_nhs_account_details(
         self, access_token: str, ods_code: str, page_number: str
     ):
         headers = {
@@ -79,7 +78,7 @@ class NHSNotify:
 
         response: dict = self.api_client.make_request(
             method="GET",
-            endpoint=f"/channels/nhsapp/accounts",
+            endpoint="/channels/nhsapp/accounts",
             headers=headers,
             params=params,
         )

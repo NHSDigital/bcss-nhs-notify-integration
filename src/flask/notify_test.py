@@ -1,9 +1,8 @@
-from time import time
-from dotenv import dotenv_values
-from flask import Flask, render_template, request, url_for, redirect, jsonify
-
 import os
+from dotenv import dotenv_values
 from services.bcss_comms_manager import BCSSCommsManager
+from flask import Flask, render_template, request, jsonify
+
 
 config = dotenv_values(".env")
 app = Flask(__name__)

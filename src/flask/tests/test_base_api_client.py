@@ -13,10 +13,10 @@ class TestBaseAPIClient:
             headers=None,
             params=None,
         )
-        responseJson = response.json()
+        response_json = response.json()
         assert response.status_code == 200
         assert response.url == "https://reqres.in/api/users"
-        assert responseJson["page"] == 1
+        assert response_json["page"] == 1
 
     # Test to make a request to an incorrect endpoint and expect a 404 if incorrectly formatted
     def test_make_request_generic_incorrect_endpoint(self, generic_base_api_client):

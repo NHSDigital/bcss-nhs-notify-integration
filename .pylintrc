@@ -308,7 +308,7 @@ max-locals=15
 max-parents=7
 
 # Maximum number of positional arguments for function / method.
-max-positional-arguments=5
+max-positional-arguments=7
 
 # Maximum number of public methods for a class (see R0904).
 max-public-methods=20
@@ -320,7 +320,7 @@ max-returns=6
 max-statements=50
 
 # Minimum number of public methods for a class (see R0903).
-min-public-methods=2
+min-public-methods=1
 
 
 [EXCEPTIONS]
@@ -345,7 +345,7 @@ indent-after-paren=4
 indent-string='    '
 
 # Maximum number of characters on a single line.
-max-line-length=121
+max-line-length=150
 
 # Maximum number of lines in a module.
 max-module-lines=1000
@@ -442,7 +442,9 @@ disable=raw-checker-failed,
         C0114,
         C0115,
         C0116,
-        E0401
+        E0401,
+        R1705,
+        W0621
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

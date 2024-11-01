@@ -47,5 +47,5 @@ class AuthManager:
         private_key = Util.get_private_key(os.getenv("PRIVATE_KEY_PATH"))
 
         return Util.generate_jwt(
-            algorithm, private_key, headers, payload, expiry_minutes=5
+            algorithm, private_key, headers, payload, expiry_minutes
         )

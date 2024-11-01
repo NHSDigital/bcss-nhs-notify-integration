@@ -252,7 +252,7 @@ class TestBCSSCommsManager:
         bcss_comms_manager,
         test_access_token,
         notify_get_nhs_app_account_details_mock_response,
-        test_ODS_code,
+        test_ods_code,
     ):
 
         mocker.patch.object(
@@ -263,11 +263,11 @@ class TestBCSSCommsManager:
 
         mocker.patch.object(
             bcss_comms_manager.nhs_notify,
-            "get_NHS_account_details",
+            "get_nhs_account_details",
             return_value=notify_get_nhs_app_account_details_mock_response,
         )
 
-        response = bcss_comms_manager.get_nhs_app_account_details(test_ODS_code, "1")
+        response = bcss_comms_manager.get_nhs_app_account_details(test_ods_code, "1")
 
         assert response == notify_get_nhs_app_account_details_mock_response
 
@@ -287,7 +287,7 @@ class TestBCSSCommsManager:
 
         mocker.patch.object(
             bcss_comms_manager.nhs_notify,
-            "get_NHS_account_details",
+            "get_nhs_account_details",
             return_value=notify_400_missing_ods_code_response,
         )
 

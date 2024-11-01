@@ -1,8 +1,8 @@
-import pytest
 import json
 import uuid
 import os
 from time import time
+import pytest
 from services.base_api_client import BaseAPIClient
 from services.nhs_notify import NHSNotify
 from services.bcss_comms_manager import BCSSCommsManager
@@ -90,7 +90,7 @@ def test_access_token() -> str:
 
 
 @pytest.fixture()
-def test_ODS_code() -> str:
+def test_ods_code() -> str:
     return "T00001"
 
 
