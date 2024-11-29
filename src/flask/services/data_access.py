@@ -1,8 +1,10 @@
+from dotenv import load_dotenv
 from .mongo_db_handler import MongoDBHandler
 
 
 class DataAccess:
     def __init__(self, uri, database_name, collection_name):
+        load_dotenv()
         self.collection_name = collection_name
         self.db_handler = MongoDBHandler(uri, database_name)
 
