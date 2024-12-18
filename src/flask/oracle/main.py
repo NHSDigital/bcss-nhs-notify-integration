@@ -43,7 +43,8 @@ if db == "BCSS":
             """
         1. Fetch all patients
         2. Update message status
-        3. Exit
+        3. Get next batch
+        4. Exit
         """
         )
         choice = input("What would you like to do? ")
@@ -57,6 +58,11 @@ if db == "BCSS":
             connection.commit()
             sql.print_table(cursor, table_name)
         elif choice == "3":
+            # sql.print_table(cursor, table_name)
+            data = menu.call_get_next_batch()
+            sql.call_get_next_batch(cursor, data)
+            # sql.print_table(cursor, table_name)
+        elif choice == "4":
             cursor.close()
             connection.close()
             ans = False

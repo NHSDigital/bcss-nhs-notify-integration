@@ -100,9 +100,16 @@ def update_patients(columns):
 
 # BCSS DB - Update message status
 def call_update_message_status():
+    batch_id = input("Enter the batch_id you would like to update: ")
     message_id = input("Enter the message_id you would like to update: ")
-    # Have list of accepted statuses, look notify spec
+    # Manual update of status for now, can change this to automated based on what we get sent from NSP component
     status = input("Enter the status you would like to update it to: ")
 
-    data = {"in_val1": message_id, "in_val2": status}
+    data = {"in_val1": batch_id, "in_val2": message_id, "in_val3": status}
+    return data
+
+
+def call_get_next_batch():
+    batch_id = input("Enter the batch_id you would like to fetch: ")
+    data = {"in_val1": batch_id}
     return data

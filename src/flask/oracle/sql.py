@@ -176,12 +176,30 @@ def call_update_message_status(cursor, data):
     var = cursor.var(int)
     data["out_val"] = var
     print(data)
+    # Will need to loop through all the message_ids (in_val2) in a batch (in_val1) and update the status to the new status (in_val3)
     cursor.execute(
         """
             begin
-                :out_val := pkg_notify_wrap.f_update_message_status(:in_val1, :in_val2);
-            end;""",
+                :out_val := pkg_notify_wrap.f_update_message_status(:in_val1, :in_val2, :in_val3);
+            end;
+        """,
         data,
     )
     response_code = var.getvalue()
     print(f"Response code: {response_code}")
+
+
+def call_get_next_batch(cursor, data):
+    var = cursor.var(str)
+    data["out_val"] = var
+
+    cursor.execute(
+        """
+            begin
+                :out_val := pkg_notify_wrap.f_get_next_batch(:in_val1);
+            end;
+        """,
+        data,
+    )
+    message_definition_id = var.getvalue()
+    print(f"Message Definition ID: {message_definition_id}")
