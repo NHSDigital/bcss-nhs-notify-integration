@@ -11,8 +11,3 @@ version.json
 !project.code-workspace
 
 # Please, add your custom content below!
-.env
-__pycache__/
-*/venv/
-git-crypt-key
-.DS_Store
